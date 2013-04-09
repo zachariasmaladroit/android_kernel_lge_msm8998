@@ -193,3 +193,5 @@ obj-$(CONFIG_LGE_BROADCAST_ISDBT_JAPAN) += broadcast/
 
 # Mobicore
 obj-$(CONFIG_TRUSTONIC_TEE) += gud/
+
+obj-$(CONFIG_CPU_QUIET)		+= cpuquiet/
