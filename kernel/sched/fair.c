@@ -6099,7 +6099,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 }
 
 #ifdef CONFIG_SMP
-
+#ifdef CONFIG_NO_HZ_COMMON
 /*
  * per rq 'load' arrray crap; XXX kill this.
  */
@@ -6170,6 +6170,7 @@ decay_load_missed(unsigned long load, unsigned long missed_updates, int idx)
 	}
 	return load;
 }
+#endif /* CONFIG_NO_HZ_COMMON */
 
 /**
  * __cpu_load_update - update the rq->cpu_load[] statistics
@@ -6209,7 +6210,7 @@ decay_load_missed(unsigned long load, unsigned long missed_updates, int idx)
 static void cpu_load_update(struct rq *this_rq, unsigned long this_load,
 			    unsigned long pending_updates)
 {
-	unsigned long tickless_load = this_rq->cpu_load[0];
+	unsigned long __maybe_unused tickless_load = this_rq->cpu_load[0];
 	int i, scale;
 
 	this_rq->nr_load_updates++;
@@ -6222,6 +6223,7 @@ static void cpu_load_update(struct rq *this_rq, unsigned long this_load,
 		/* scale is effectively 1 << i now, and >> i divides by scale */
 
 		old_load = this_rq->cpu_load[i];
+#ifdef CONFIG_NO_HZ_COMMON
 		old_load = decay_load_missed(old_load, pending_updates - 1, i);
 		if (tickless_load) {
 			old_load -= decay_load_missed(tickless_load, pending_updates - 1, i);
@@ -6232,6 +6234,7 @@ static void cpu_load_update(struct rq *this_rq, unsigned long this_load,
 			 */
 			old_load += tickless_load;
 		}
+#endif
 		new_load = this_load;
 		/*
 		 * Round up the averaging division if load is increasing. This
@@ -6345,8 +6348,10 @@ static inline void cpu_load_update_nohz(struct rq *this_rq,
 
 static void cpu_load_update_periodic(struct rq *this_rq, unsigned long load)
 {
+#ifdef CONFIG_NO_HZ_COMMON
 	/* See the mess around cpu_load_update_nohz(). */
 	this_rq->last_load_update_tick = READ_ONCE(jiffies);
+#endif
 	cpu_load_update(this_rq, load, 1);
 }
 
