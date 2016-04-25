@@ -60,6 +60,9 @@ int efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md);
 #define alloc_screen_info(x...)		&screen_info
 #define free_screen_info(x...)
 
+#define alloc_screen_info(x...)		&screen_info
+#define free_screen_info(x...)
+
 #define EFI_ALLOC_ALIGN		SZ_64K
 
 /*
