@@ -947,6 +947,7 @@ static void __tick_nohz_idle_stop_tick(struct tick_sched *ts)
 	if (can_stop_idle_tick(cpu, ts)) {
 		int was_stopped = ts->tick_stopped;
 
+		now = tick_nohz_start_idle(ts);
 		ts->idle_calls++;
 
 		/*
