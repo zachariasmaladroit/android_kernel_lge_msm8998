@@ -31,6 +31,7 @@
 #include <linux/sched.h>       /* need_resched() */
 #include <linux/tick.h>
 #include <linux/cpuidle.h>
+#include <linux/syscore_ops.h>
 #include <linux/cpu.h>
 #include <acpi/processor.h>
 
