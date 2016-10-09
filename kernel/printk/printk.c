@@ -569,11 +569,8 @@ static ssize_t msg_print_ext_header(char *buf, size_t size,
 	 * better readable output. 'c' in the record flags mark the first
 	 * fragment of a line, '+' the following.
 	 */
-	if (msg->flags & LOG_CONT && !(prev_flags & LOG_CONT))
-		cont = 'c';
-	else if ((msg->flags & LOG_CONT) ||
-		 ((prev_flags & LOG_CONT) && !(msg->flags & LOG_PREFIX)))
-		cont = '+';
+	if (msg->flags & LOG_CONT)
+		cont = (prev_flags & LOG_CONT) ? '+' : 'c';
 
 #ifdef CONFIG_MACH_LGE
 	len = scnprintf(buf, size, "<%u>", (msg->facility << 3) | msg->level);
@@ -1844,10 +1841,9 @@ asmlinkage int vprintk_emit(int facility, int level,
 
 	/* strip kernel syslog prefix and extract log level or control flags */
 	if (facility == 0) {
-		int kern_level = printk_get_level(text);
+		int kern_level;
 
-		if (kern_level) {
-			const char *end_of_header = printk_skip_level(text);
+		while ((kern_level = printk_get_level(text)) != 0) {
 			switch (kern_level) {
 			case '0' ... '7':
 				if (level == LOGLEVEL_DEFAULT)
@@ -1855,14 +1851,13 @@ asmlinkage int vprintk_emit(int facility, int level,
 				/* fallthrough */
 			case 'd':	/* KERN_DEFAULT */
 				lflags |= LOG_PREFIX;
+				break;
+			case 'c':	/* KERN_CONT */
+				lflags |= LOG_CONT;
 			}
-			/*
-			 * No need to check length here because vscnprintf
-			 * put '\0' at the end of the string. Only valid and
-			 * newly printed level is detected.
-			 */
-			text_len -= end_of_header - text;
-			text = (char *)end_of_header;
+
+			text_len -= 2;
+			text += 2;
 		}
 	}
 
@@ -1881,7 +1876,7 @@ asmlinkage int vprintk_emit(int facility, int level,
 		 * Flush the conflicting buffer. An earlier newline was missing,
 		 * or another task also prints continuation lines.
 		 */
-		if (cont.len && (lflags & LOG_PREFIX || cont.owner != current))
+		if (cont.len && (!(lflags & LOG_CONT) || cont.owner != current))
 			cont_flush(LOG_NEWLINE);
 
 		/* buffer line if possible, otherwise store it right away */
@@ -1903,7 +1898,7 @@ asmlinkage int vprintk_emit(int facility, int level,
 		 * a newline, flush and append the newline.
 		 */
 		if (cont.len) {
-			if (cont.owner == current && !(lflags & LOG_PREFIX))
+			if (cont.owner == current && (lflags & LOG_CONT))
 				stored = cont_add(facility, level, text,
 						  text_len);
 			cont_flush(LOG_NEWLINE);
