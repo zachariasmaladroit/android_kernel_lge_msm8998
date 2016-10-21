@@ -603,17 +603,17 @@ static int enter_state(suspend_state_t state)
 #ifndef CONFIG_SUSPEND_SKIP_SYNC
 	trace_suspend_resume(TPS("sync_filesystems"), 0, true);
 #ifdef CONFIG_PM_SUSPEND_BG_SYNC
-	printk(KERN_INFO "PM: Background Syncing filesystems ... \n");
+	pr_info("PM: Background Syncing filesystems ... \n");
 	if (bg_sync()) {
-		printk(KERN_INFO "[bg_sync] Syncing busy ...\n");
+		pr_err("[bg_sync] Syncing busy ...\n");
 		error = -EBUSY;
 		goto Unlock;
 	}
-	printk("PM: done.\n");
+	pr_cont("PM: done.\n");
 #else
-	printk(KERN_INFO "PM: Syncing filesystems ... ");
+	pr_info("PM: Syncing filesystems ... ");
 	sys_sync();
-	printk("done.\n");
+	pr_cont("done.\n");
 #endif
 	trace_suspend_resume(TPS("sync_filesystems"), 0, false);
 #endif
