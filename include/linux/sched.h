@@ -1087,6 +1087,7 @@ struct sched_capacity_reqs {
 };
 
 /*
+<<<<<<< HEAD
  * Wake-queues are lists of tasks with a pending wakeup, whose
  * callers have already marked the task as woken internally,
  * and can thus carry on. A common use case is being able to
@@ -1645,6 +1646,10 @@ enum perf_event_task_context {
 	perf_hw_context = 0,
 	perf_sw_context,
 	perf_nr_task_contexts,
+};
+
+struct wake_q_node {
+	struct wake_q_node *next;
 };
 
 /* Track pages that require TLB flushes */
