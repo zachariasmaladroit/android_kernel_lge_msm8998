@@ -112,12 +112,10 @@ static int uid_time_in_state_show(struct seq_file *m, void *v)
 		struct cpufreq_policy *policy;
 
 		policy = cpufreq_cpu_get(i);
-		if (!policy)
-			continue;
 		table = cpufreq_frequency_get_table(i);
 
 		/* Assumes cpus are colocated within a policy */
-		if (table && last_policy != policy) {
+		if (last_policy != policy) {
 			last_policy = policy;
 			cpufreq_for_each_valid_entry(pos, table)
 				seq_printf(m, " %d", pos->frequency);
@@ -227,7 +225,7 @@ void cpufreq_task_stats_init(struct task_struct *p)
 	WRITE_ONCE(p->max_state, cpufreq_max_state);
 
 	alloc_size = p->max_state * sizeof(p->time_in_state[0]);
-	temp = kzalloc(alloc_size, GFP_ATOMIC);
+	temp = kzalloc(alloc_size, GFP_KERNEL);
 
 	spin_lock_irqsave(&task_time_in_state_lock, flags);
 	p->time_in_state = temp;
@@ -344,8 +342,6 @@ static ssize_t show_all_time_in_state(struct kobject *kobj,
 	len += scnprintf(buf + len, PAGE_SIZE - len, "freq\t\t");
 	for_each_possible_cpu(cpu) {
 		policy = cpufreq_cpu_get(cpu);
-		if (!policy)
-			continue;
 		stats = policy->stats;
 		len += scnprintf(buf + len, PAGE_SIZE - len, "cpu%u\t\t", cpu);
 		cpufreq_stats_update(stats);
@@ -359,8 +355,6 @@ static ssize_t show_all_time_in_state(struct kobject *kobj,
 		len += scnprintf(buf + len, PAGE_SIZE - len, "\n%u\t\t", freq);
 		for_each_possible_cpu(cpu) {
 			policy = cpufreq_cpu_get(cpu);
-			if (!policy)
-				continue;
 			stats = policy->stats;
 			if (i >= stats->prev_states &&
 				i < stats->prev_states + stats->max_state) {
@@ -453,8 +447,6 @@ static int cpufreq_stats_create_all_table(void)
 
 	for_each_possible_cpu(cpu) {
 		policy = cpufreq_cpu_get(cpu);
-		if (!policy)
-			continue;
 		stats = policy->stats;
 		if (policy != last_policy) {
 			for (i = 0; i < stats->max_state; ++i)
@@ -694,8 +686,6 @@ static int __init cpufreq_stats_init(void)
 	get_online_cpus();
 	for_each_online_cpu(cpu) {
 		policy = cpufreq_cpu_get(cpu);
-		if (!policy)
-			continue;
 		if (policy != last_policy) {
 			cpufreq_stats_create_table(policy);
 			last_policy = policy;
