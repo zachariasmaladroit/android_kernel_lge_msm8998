@@ -183,6 +183,7 @@ static bool get_dload_mode(void)
 	return dload_mode_enabled;
 }
 
+#if 0
 static void enable_emergency_dload_mode(void)
 {
 	int ret;
@@ -405,7 +406,7 @@ static void msm_restart_prepare(const char *cmd)
 				qpnp_pon_set_restart_reason(
 					PON_RESTART_REASON_SHIP_MODE);
 #endif
-#ifndef CONFIG_LGE_HANDLE_PANIC
+#if 0
 		} else if (!strncmp(cmd, "edl", 3)) {
 			enable_emergency_dload_mode();
 #endif
