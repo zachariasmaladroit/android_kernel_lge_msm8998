@@ -87,6 +87,9 @@ bool qpnp_pon_check_hard_reset_stored(void);
 #ifdef CONFIG_LGE_PM
 int qpnp_pon_is_off_reason(void);
 #endif
+int qpnp_pon_is_lpk(void);
+int qpnp_pon_is_lck(void);
+int qpnp_pon_is_ps_hold_reset(void);
 
 #else
 static int qpnp_pon_system_pwr_off(enum pon_power_off_type type)
@@ -114,6 +117,18 @@ static inline bool qpnp_pon_check_hard_reset_stored(void)
 #ifdef CONFIG_LGE_PM
 static inline int qpnp_pon_is_off_reason(void) { return -ENODEV; }
 #endif
+static inline int qpnp_pon_is_lpk(void)
+{
+	return -ENODEV;
+}
+static inline int qpnp_pon_is_lck(void)
+{
+	return -ENODEV;
+}
+static inline int qpnp_pon_is_ps_hold_reset(void)
+{
+	return -ENODEV;
+}
 #endif
 
 #endif
