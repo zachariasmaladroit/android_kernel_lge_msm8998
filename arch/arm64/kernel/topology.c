@@ -19,35 +19,20 @@
 #include <linux/nodemask.h>
 #include <linux/of.h>
 #include <linux/sched.h>
-#include <linux/slab.h>
 #include <linux/sched.h>
 #include <linux/sched_energy.h>
 
 #include <asm/cputype.h>
 #include <asm/topology.h>
 
-/*
- * cpu power table
- * This per cpu data structure describes the relative capacity of each core.
- * On a heteregenous system, cores don't have the same computation capacity
- * and we reflect that difference in the cpu_power field so the scheduler can
- * take this difference into account during load balance. A per cpu structure
- * is preferred because each CPU updates its own cpu_power field during the
- * load balance except for idle cores. One idle core is selected to run the
- * rebalance_domains for all idle cores and the cpu_power can be updated
- * during this sequence.
- */
+static DEFINE_PER_CPU(unsigned long, cpu_efficiency) = SCHED_CAPACITY_SCALE;
+
+unsigned long arch_get_cpu_efficiency(int cpu)
+{
+	return per_cpu(cpu_efficiency, cpu);
+}
+
 static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
-
-unsigned long arch_scale_freq_power(struct sched_domain *sd, int cpu)
-{
-	return per_cpu(cpu_scale, cpu);
-}
-
-static void set_power_scale(unsigned int cpu, unsigned long power)
-{
-	per_cpu(cpu_scale, cpu) = power;
-}
 
 unsigned long scale_cpu_capacity(struct sched_domain *sd, int cpu)
 {
@@ -203,6 +188,7 @@ static int __init parse_cluster(struct device_node *cluster, int depth)
 	return 0;
 }
 
+<<<<<<< HEAD
 struct cpu_efficiency {
 	const char *compatible;
 	unsigned long efficiency;
@@ -235,11 +221,14 @@ static unsigned long middle_capacity = 1;
  * 'average' CPU is of middle power. Also see the comments near
  * table_efficiency[] and update_cpu_power().
  */
+=======
+>>>>>>> 5ecfd8a3b13c... Remove HMP for EAS bringup on msm-4.4
 static int __init parse_dt_topology(void)
 {
 	struct device_node *cn, *map;
 	int ret = 0;
 	int cpu;
+	u32 efficiency;
 
 	cn = of_find_node_by_path("/cpus");
 	if (!cn) {
@@ -263,10 +252,11 @@ static int __init parse_dt_topology(void)
 	 * Check that all cores are in the topology; the SMP code will
 	 * only mark cores described in the DT as possible.
 	 */
-	for_each_possible_cpu(cpu)
+	for_each_possible_cpu(cpu) {
 		if (cpu_topology[cpu].cluster_id == -1)
 			ret = -EINVAL;
 
+<<<<<<< HEAD
 out_map:
 	of_node_put(map);
 out:
@@ -357,6 +347,22 @@ static void update_cpu_power(unsigned int cpu)
 
 	pr_debug("CPU%u: update cpu_power %lu\n",
 		cpu, arch_scale_freq_power(NULL, cpu));
+=======
+		/* The CPU efficiency value passed from the device tree */
+		cn = of_get_cpu_node(cpu, NULL);
+		if (of_property_read_u32(cn, "efficiency", &efficiency) < 0) {
+			WARN_ON(1);
+			continue;
+		}
+		per_cpu(cpu_efficiency, cpu) = efficiency;
+	}
+
+out_map:
+	of_node_put(map);
+out:
+	of_node_put(cn);
+	return ret;
+>>>>>>> 5ecfd8a3b13c... Remove HMP for EAS bringup on msm-4.4
 }
 
 /*
@@ -420,7 +426,7 @@ static void update_cpu_capacity(unsigned int cpu)
 {
 	unsigned long capacity = SCHED_CAPACITY_SCALE;
 
-	if (sched_energy_aware && cpu_core_energy(cpu)) {
+	if (cpu_core_energy(cpu)) {
 		int max_cap_idx = cpu_core_energy(cpu)->nr_cap_states - 1;
 		capacity = cpu_core_energy(cpu)->cap_states[max_cap_idx].cap;
 	}
@@ -492,7 +498,6 @@ void store_cpu_topology(unsigned int cpuid)
 
 topology_populated:
 	update_siblings_masks(cpuid);
-	update_cpu_power(cpuid);
 	update_cpu_capacity(cpuid);
 }
 
@@ -514,33 +519,18 @@ static void __init reset_cpu_topology(void)
 	}
 }
 
-static void __init reset_cpu_power(void)
-{
-	unsigned int cpu;
-
-	for_each_possible_cpu(cpu)
-		set_power_scale(cpu, SCHED_CAPACITY_SCALE);
-}
-
 void __init init_cpu_topology(void)
 {
-	int cpu;
-
 	reset_cpu_topology();
 
 	/*
 	 * Discard anything that was parsed if we hit an error so we
 	 * don't use partial information.
 	 */
-	if (of_have_populated_dt() && parse_dt_topology()) {
+	if (of_have_populated_dt() && parse_dt_topology())
 		reset_cpu_topology();
-	} else {
+	else
 		set_sched_topology(arm64_topology);
-		for_each_possible_cpu(cpu)
-			update_siblings_masks(cpu);
-	}
 
-	reset_cpu_power();
-	parse_dt_cpu_power();
 	init_sched_energy_costs();
 }
