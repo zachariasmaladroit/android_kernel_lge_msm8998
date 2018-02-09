@@ -41,7 +41,7 @@ static unsigned int input_boost_ms = 40;
 module_param(input_boost_ms, uint, 0644);
 
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
-static int dynamic_stune_boost = 0;
+static int dynamic_stune_boost;
 module_param(dynamic_stune_boost, uint, 0644);
 #endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
@@ -181,7 +181,7 @@ static void do_input_boost_rem(struct work_struct *work)
 
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
 	/* Reset dynamic stune boost value to the default value */
-        dynamic_boost_write(topapp_css, default_topapp_boost);
+	reset_stune_boost("top-app");
 #endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 	/* Update policies for all online CPUs */
@@ -203,14 +203,13 @@ static void do_input_boost(struct kthread_work *work)
 		i_sync_info->input_boost_min = i_sync_info->input_boost_freq;
 	}
 
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-	/* Set dynamic stune boost value */
-        if (dynamic_stune_boost > default_topapp_boost)
-                dynamic_boost_write(topapp_css, dynamic_stune_boost);
-#endif /* CONFIG_DYNAMIC_STUNE_BOOST */
-
 	/* Update policies for all online CPUs */
 	update_policy_online();
+
+#ifdef CONFIG_DYNAMIC_STUNE_BOOST
+	/* Set dynamic stune boost value */
+	do_stune_boost("top-app", dynamic_stune_boost);
+#endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 	queue_delayed_work(system_power_efficient_wq,
 		&input_boost_rem, msecs_to_jiffies(input_boost_ms));
@@ -269,7 +268,7 @@ static void cpuboost_input_disconnect(struct input_handle *handle)
 {
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
 	/* Reset dynamic stune boost value to the default value */
-        dynamic_boost_write(topapp_css, default_topapp_boost);
+	reset_stune_boost("top-app");
 #endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 	input_close_device(handle);
