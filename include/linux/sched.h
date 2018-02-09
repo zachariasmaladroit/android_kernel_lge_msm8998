@@ -169,7 +169,6 @@ extern int nr_threads;
 DECLARE_PER_CPU(unsigned long, process_counts);
 extern int nr_processes(void);
 extern unsigned long nr_running(void);
-extern bool cpu_has_rt_task(int cpu);
 extern bool single_task_running(void);
 extern unsigned long nr_iowait(void);
 extern unsigned long nr_iowait_cpu(int cpu);
@@ -368,7 +367,6 @@ static inline void set_cpu_sd_state_idle(void) { }
  * Only dump TASK_* tasks. (0 for all tasks)
  */
 extern void show_state_filter(unsigned long state_filter);
-extern void show_thread_group_state_filter(const char *tg_comm, unsigned long state_filter); // muskie
 
 static inline void show_state(void)
 {
@@ -1811,8 +1809,6 @@ struct task_struct {
 #ifdef CONFIG_DEBUG_MUTEXES
 	/* mutex deadlock detection */
 	struct mutex_waiter *blocked_on;
-	struct task_struct  *blocked_by; // muskie
-	unsigned long        blocked_since; // muskie
 #endif
 #ifdef CONFIG_TRACE_IRQFLAGS
 	unsigned int irq_events;
@@ -1979,9 +1975,6 @@ struct task_struct {
 	 */
 	u64 timer_slack_ns;
 	u64 default_timer_slack_ns;
-
-	/* Time that the task woke up or was last descheduled */
-	u64 waiting_time;
 
 #ifdef CONFIG_KASAN
 	unsigned int kasan_depth;
@@ -3475,9 +3468,8 @@ void cpufreq_remove_update_util_hook(int cpu);
 #endif /* CONFIG_CPU_FREQ */
 
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
-extern int default_topapp_boost;
-extern struct cgroup_subsys_state *topapp_css;
-int dynamic_boost_write(struct cgroup_subsys_state *css, int boost);
+int do_stune_boost(char *st_name, int boost);
+int reset_stune_boost(char *st_name);
 #endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 #endif
