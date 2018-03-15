@@ -225,7 +225,6 @@ static void cpu_idle_loop(void)
 
 		__current_set_polling();
 		tick_nohz_idle_enter();
-		tick_nohz_idle_stop_tick_protected();
 
 		while (!need_resched()) {
 			check_pgt_cache();
@@ -235,6 +234,7 @@ static void cpu_idle_loop(void)
 				rcu_cpu_notify(NULL, CPU_DYING_IDLE,
 					       (void *)(long)smp_processor_id());
 				smp_mb(); /* all activity before dead. */
+				tick_nohz_idle_stop_tick_protected();
 				this_cpu_write(cpu_dead_idle, true);
 				arch_cpu_idle_dead();
 			}
@@ -251,11 +251,13 @@ static void cpu_idle_loop(void)
 			 * know that the IPI is going to arrive right
 			 * away
 			 */
-			if (cpu_idle_force_poll || tick_check_broadcast_expired())
+			if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
+				tick_nohz_idle_restart_tick();
 				cpu_idle_poll();
-			else
+			} else {
+				tick_nohz_idle_stop_tick();
 				cpuidle_idle_call();
-
+			}
 			arch_cpu_idle_exit();
 		}
 
