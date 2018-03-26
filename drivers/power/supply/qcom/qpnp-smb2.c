@@ -1229,6 +1229,9 @@ static enum power_supply_property smb2_batt_props[] = {
 #ifdef CONFIG_LGE_USB_MOISTURE_DETECTION
 	POWER_SUPPLY_PROP_MOISTURE_DETECTION,
 #endif
+#ifndef CONFIG_QPNP_FG_GEN3_LEGACY_CYCLE_COUNT
+	POWER_SUPPLY_PROP_CYCLE_COUNT,
+#endif
 };
 
 static int smb2_batt_get_prop(struct power_supply *psy,
@@ -1438,6 +1441,10 @@ static int smb2_batt_get_prop(struct power_supply *psy,
 #ifdef CONFIG_LGE_PM_STEP_CHARGING
 	case POWER_SUPPLY_PROP_LGE_STEP_CHARGING_ENABLE:
 		val->intval = chg->sc_enable;
+#endif
+#ifndef CONFIG_QPNP_FG_GEN3_LEGACY_CYCLE_COUNT
+	case POWER_SUPPLY_PROP_CYCLE_COUNT:
+		rc = smblib_get_cycle_count(chg, val);
 		break;
 #endif
 	default:
