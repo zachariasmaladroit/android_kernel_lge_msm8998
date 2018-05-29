@@ -34,6 +34,7 @@
 #include "../pinconf.h"
 #include "pinctrl-msm.h"
 #include "../pinctrl-utils.h"
+#include <linux/wakeup_reason.h>
 
 #ifdef CONFIG_LGE_PM
 #include "linux/suspend.h"
@@ -542,6 +543,9 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 		if(msm_gpio_check_access(gpio) == true)
 		{
 #endif
+			/* GPIO 0-3, 81-84 is restricted to only access in TZ */
+			if ((i >= 0 && i <= 3) || (i >= 81 && i <= 84))
+				continue;
 			msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
 			seq_puts(s, "\n");
 #if defined(CONFIG_MACH_MSM8998_LUCY) || defined(CONFIG_MACH_MSM8998_JOAN)
@@ -1015,6 +1019,7 @@ static void msm_pinctrl_resume(void)
 				name = desc->action->name;
 
 			pr_warn("%s: %d triggered %s\n", __func__, irq, name);
+			log_wakeup_reason(irq);
 		}
 	}
 	spin_unlock_irqrestore(&pctrl->lock, flags);
