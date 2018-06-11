@@ -37,6 +37,7 @@
 #include <linux/version.h>
 #include <linux/miscdevice.h>
 #include <linux/platform_device.h>
+#include <linux/msm_rtb.h>
 #include <asm/uaccess.h>
 #include <asm/atomic.h>
 #include "tspdrv.h"
