@@ -299,6 +299,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
+#CCACHE := $(shell which ccache)
+
 HOSTCC       = gcc
 HOSTCXX      = g++
 HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
@@ -343,15 +345,34 @@ export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
 scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
+# Set optimization flags for gcc
+CC_FLAGS := -Os \
+	-fno-schedule-insns \
+	-flive-range-shrinkage \
+	-fshrink-wrap -fshrink-wrap-separate \
+	-fmodulo-sched -fmodulo-sched-allow-regmoves \
+	-fivopts \
+	-finline-small-functions -fpartial-inlining -findirect-inlining \
+	-foptimize-sibling-calls \
+	-fdevirtualize -fdevirtualize-speculatively \
+	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
+	-ftree-loop-im -funswitch-loops \
+	-fpredictive-commoning \
+	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
+	-Wno-maybe-uninitialized -Wno-misleading-indentation \
+	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
+
+LD_FLAGS := -Os --sort-common
+
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
-REAL_CC		= $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld $(LD_FLAGS)
+CC		= $(CCACHE) $(CROSS_COMPILE)gcc $(CC_FLAGS)
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
 STRIP		= $(CROSS_COMPILE)strip
-OBJCOPY		= $(CROSS_COMPILE)objcopy
+OBJCOPY		= $(CROSS_COMPILE)objcopy --remove-section=.note.gnu.build-id
 OBJDUMP		= $(CROSS_COMPILE)objdump
 AWK		= awk
 GENKSYMS	= scripts/genksyms/genksyms
@@ -363,7 +384,7 @@ CHECK		= sparse
 
 # Use the wrapper for the compiler.  This wrapper scans for new
 # warnings and causes the build to stop upon encountering them.
-CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
+# CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
@@ -399,7 +420,11 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
+		   -fdiagnostics-color=always \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
+
+#		   -fno-delete-null-pointer-checks \
+#		   -ftree-vrp -fisolate-erroneous-paths-dereference \
 
 
 KBUILD_AFLAGS_KERNEL :=
