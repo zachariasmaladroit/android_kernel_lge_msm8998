@@ -10,10 +10,6 @@ NAME = Blurry Fish Butt
 # Comments in this file are targeted only to the developer, do not
 # expect to learn how to build the kernel reading this file.
 
-# That's our default target when none is given on the command line
-PHONY := _all
-_all:
-
 # o Do not use make's built-in rules and variables
 #   (this increases performance and avoids hard-to-debug behaviour);
 # o Look for make include files relative to root of kernel src
@@ -91,12 +87,10 @@ endif
 ifneq ($(filter 4.%,$(MAKE_VERSION)),)	# make-4
 ifneq ($(filter %s ,$(firstword x$(MAKEFLAGS))),)
   quiet=silent_
-  tools_silent=s
 endif
 else					# make-3.8x
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
   quiet=silent_
-  tools_silent=-s
 endif
 endif
 
@@ -126,6 +120,10 @@ ifeq ($(KBUILD_SRC),)
 ifeq ("$(origin O)", "command line")
   KBUILD_OUTPUT := $(O)
 endif
+
+# That's our default target when none is given on the command line
+PHONY := _all
+_all:
 
 # Cancel implicit rules on top Makefile
 $(CURDIR)/Makefile Makefile: ;
@@ -301,11 +299,9 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-#CCACHE := $(shell which ccache)
-
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
 HOSTCXXFLAGS = -O2
 
 ifeq ($(shell $(HOSTCC) -v 2>&1 | grep -c "clang version"), 1)
@@ -347,39 +343,15 @@ export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
 scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
-# Set optimization flags for gcc
-#CC_FLAGS := -Os \
-#	-fno-schedule-insns \
-#	-flive-range-shrinkage \
-#	-fshrink-wrap -fshrink-wrap-separate \
-#	-fivopts \
-#	-finline-small-functions -fpartial-inlining -findirect-inlining \
-#	-foptimize-sibling-calls \
-#	-fdevirtualize -fdevirtualize-speculatively \
-#	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
-#	-ftree-loop-im -funswitch-loops \
-#	-fpredictive-commoning \
-#	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
-#	-Wno-maybe-uninitialized -Wno-misleading-indentation \
-#	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
-
-#LD_FLAGS := -Os --sort-common
-
-# 	-fmodulo-sched -fmodulo-sched-allow-regmoves \
-
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld 
-#$(LD_FLAGS)
-CC		= $(CROSS_COMPILE)gcc 
-#$(CC_FLAGS)
-# $(CCACHE) 
+LD		= $(CROSS_COMPILE)ld
+REAL_CC		= $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
 STRIP		= $(CROSS_COMPILE)strip
-OBJCOPY		= $(CROSS_COMPILE)objcopy 
-#--remove-section=.note.gnu.build-id
+OBJCOPY		= $(CROSS_COMPILE)objcopy
 OBJDUMP		= $(CROSS_COMPILE)objdump
 AWK		= awk
 GENKSYMS	= scripts/genksyms/genksyms
@@ -391,7 +363,7 @@ CHECK		= sparse
 
 # Use the wrapper for the compiler.  This wrapper scans for new
 # warnings and causes the build to stop upon encountering them.
-# CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
+CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
@@ -427,13 +399,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -fdiagnostics-color=always \
-		   -Wno-error=misleading-indentation \
-		   -Wno-error=unused-local-typedefs \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
-
-#		   -fno-delete-null-pointer-checks \
-#		   -ftree-vrp -fisolate-erroneous-paths-dereference \
 
 
 KBUILD_AFLAGS_KERNEL :=
@@ -657,11 +623,6 @@ include arch/$(SRCARCH)/Makefile
 KBUILD_CFLAGS	+= $(call cc-option,-fno-delete-null-pointer-checks,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,frame-address,)
-KBUILD_CFLAGS	+= $(call cc-disable-warning,format-truncation,)
-KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)
-KBUILD_CFLAGS	+= $(call cc-disable-warning,format-overflow,)
-KBUILD_CFLAGS	+= $(call cc-disable-warning,int-in-bool-context,)
-KBUILD_CFLAGS	+= $(call cc-disable-warning,int-in-bool-context,)
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
@@ -750,7 +711,6 @@ else
 
 # These warnings generated too much noise in a regular build.
 # Use make W=1 to enable them (see scripts/Makefile.build)
-KBUILD_CFLAGS += $(call cc-disable-warning, unused-variable)
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
 endif
@@ -823,18 +783,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, pointer-sign)
 # disable invalid "can't wrap" optimizations for signed / pointers
 KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
 
-# clang sets -fmerge-all-constants by default as optimization, but this
-# is non-conforming behavior for C and in fact breaks the kernel, so we
-# need to disable it here generally.
-KBUILD_CFLAGS	+= $(call cc-option,-fno-merge-all-constants)
-
-# for gcc -fno-merge-all-constants disables everything, but it is fine
-# to have actual conforming behavior enabled.
-KBUILD_CFLAGS	+= $(call cc-option,-fmerge-constants)
-
-# Make sure -fstack-check isn't enabled (like gentoo apparently did)
-KBUILD_CFLAGS  += $(call cc-option,-fno-stack-check,)
-
 # conserve stack if available
 KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
 
@@ -853,11 +801,6 @@ KBUILD_ARFLAGS := $(call ar-option,D)
 include scripts/Makefile.kasan
 include scripts/Makefile.extrawarn
 include scripts/Makefile.ubsan
-
-# Add any flags specific to ld.gold
-ifeq ($(ld-name),gold)
-LDFLAGS		+= $(LDFLAGS_GOLD)
-endif
 
 # Add any arch overrides and user supplied CPPFLAGS, AFLAGS and CFLAGS as the
 # last assignments
@@ -1579,11 +1522,11 @@ image_name:
 # Clear a bunch of variables before executing the submake
 tools/: FORCE
 	$(Q)mkdir -p $(objtree)/tools
-	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(shell cd $(objtree) && /bin/pwd) subdir=tools -C $(src)/tools/
+	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter --j% -j,$(MAKEFLAGS))" O=$(shell cd $(objtree) && /bin/pwd) subdir=tools -C $(src)/tools/
 
 tools/%: FORCE
 	$(Q)mkdir -p $(objtree)/tools
-	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(shell cd $(objtree) && /bin/pwd) subdir=tools -C $(src)/tools/ $*
+	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter --j% -j,$(MAKEFLAGS))" O=$(shell cd $(objtree) && /bin/pwd) subdir=tools -C $(src)/tools/ $*
 
 # Single targets
 # ---------------------------------------------------------------------------
