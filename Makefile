@@ -350,7 +350,6 @@ CC_FLAGS := -Os \
 	-fno-schedule-insns \
 	-flive-range-shrinkage \
 	-fshrink-wrap -fshrink-wrap-separate \
-	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 	-fivopts \
 	-finline-small-functions -fpartial-inlining -findirect-inlining \
 	-foptimize-sibling-calls \
@@ -363,6 +362,8 @@ CC_FLAGS := -Os \
 	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
 
 LD_FLAGS := -Os --sort-common
+
+# 	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
