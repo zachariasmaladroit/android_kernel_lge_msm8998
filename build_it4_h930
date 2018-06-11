@@ -1,5 +1,5 @@
-### GCC 8.1
-### I'm using Linaro 8.1 toolchain
+### GCC 6.2
+### I'm using Linaro 6.2 toolchain
 
 #export USE_CCACHE=1
 
@@ -9,7 +9,7 @@ export KBUILD_BUILD_USER=zacharias.maladroit
 export KBUILD_BUILD_HOST=BuildHost
 
 export ARCH=arm64
-export PATH=~/android/toolchains/arter97_linaro-64_8.1/bin/:$PATH
+export PATH=~/android/toolchains/arter97_linaro-64_6.2/bin/:$PATH
 export CROSS_COMPILE=aarch64-linux-gnu-
 
 make joan_global_com-perf_defconfig
