@@ -348,35 +348,38 @@ scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
 # Set optimization flags for gcc
-CC_FLAGS := -Os \
-	-fno-schedule-insns \
-	-flive-range-shrinkage \
-	-fshrink-wrap -fshrink-wrap-separate \
-	-fivopts \
-	-finline-small-functions -fpartial-inlining -findirect-inlining \
-	-foptimize-sibling-calls \
-	-fdevirtualize -fdevirtualize-speculatively \
-	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
-	-ftree-loop-im -funswitch-loops \
-	-fpredictive-commoning \
-	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
-	-Wno-maybe-uninitialized -Wno-misleading-indentation \
-	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
+#CC_FLAGS := -Os \
+#	-fno-schedule-insns \
+#	-flive-range-shrinkage \
+#	-fshrink-wrap -fshrink-wrap-separate \
+#	-fivopts \
+#	-finline-small-functions -fpartial-inlining -findirect-inlining \
+#	-foptimize-sibling-calls \
+#	-fdevirtualize -fdevirtualize-speculatively \
+#	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
+#	-ftree-loop-im -funswitch-loops \
+#	-fpredictive-commoning \
+#	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
+#	-Wno-maybe-uninitialized -Wno-misleading-indentation \
+#	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
 
-LD_FLAGS := -Os --sort-common
+#LD_FLAGS := -Os --sort-common
 
 # 	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld $(LD_FLAGS)
-CC		= $(CROSS_COMPILE)gcc $(CC_FLAGS)
+LD		= $(CROSS_COMPILE)ld 
+#$(LD_FLAGS)
+CC		= $(CROSS_COMPILE)gcc 
+#$(CC_FLAGS)
 # $(CCACHE) 
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
 STRIP		= $(CROSS_COMPILE)strip
-OBJCOPY		= $(CROSS_COMPILE)objcopy --remove-section=.note.gnu.build-id
+OBJCOPY		= $(CROSS_COMPILE)objcopy 
+#--remove-section=.note.gnu.build-id
 OBJDUMP		= $(CROSS_COMPILE)objdump
 AWK		= awk
 GENKSYMS	= scripts/genksyms/genksyms
