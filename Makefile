@@ -428,6 +428,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fdiagnostics-color=always \
+		   -Wno-error=misleading-indentation \
+		   -Wno-error=unused-local-typedefs \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 
 #		   -fno-delete-null-pointer-checks \
@@ -658,6 +660,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning,frame-address,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,format-truncation,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,format-overflow,)
+KBUILD_CFLAGS	+= $(call cc-disable-warning,int-in-bool-context,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,int-in-bool-context,)
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
