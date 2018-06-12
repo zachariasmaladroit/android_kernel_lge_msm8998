@@ -1012,6 +1012,7 @@ CONFIG_ARM64_PAN=y
 CONFIG_SCHED_AUTOGROUP=y # some workloads periods of freezing & excessive jank
 # CONFIG_QCOM_RTB is not set
 # CONFIG_QCOM_RTB_SEPARATE_CPUS is not set
+# CONFIG_MMC_PERF_PROFILING is not set
 
 # disable workarounds NOT applicable to our hardware (modified cortex A55, A73)
 # CONFIG_ARM64_ERRATUM_826319 is not set
