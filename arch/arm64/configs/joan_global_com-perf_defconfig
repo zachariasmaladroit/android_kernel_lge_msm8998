@@ -35,7 +35,7 @@ CONFIG_KALLSYMS_ALL=y
 # CONFIG_AIO is not set
 # CONFIG_MEMBARRIER is not set
 CONFIG_EMBEDDED=y
-# CONFIG_SLUB_DEBUG is not set
+
 # CONFIG_COMPAT_BRK is not set
 CONFIG_PROFILING=y
 CONFIG_CC_STACKPROTECTOR_STRONG=y
@@ -1016,7 +1016,10 @@ CONFIG_HARDENED_USERCOPY=y
 # CONFIG_HARDENED_USERCOPY_FALLBACK is not set # upstream
 
 # Allow allocator validation checking to be enabled (see "slub_debug=P" below).
-CONFIG_SLUB_DEBUG=y
+#
+# Note: most likely will lead to non-booting kernel once FZP is passed
+#
+# CONFIG_SLUB_DEBUG is not set
 
 # ASLR, randomization, etc.
 CONFIG_ARCH_MMAP_RND_BITS_MIN=24
