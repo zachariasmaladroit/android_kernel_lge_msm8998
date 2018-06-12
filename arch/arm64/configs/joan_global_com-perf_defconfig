@@ -1009,6 +1009,7 @@ CONFIG_ARM64_PAN=y
 # CONFIG_MSM_BOOT_STATS is not set
 # CONFIG_ARM_MEMLAT_MON is not set
 # CONFIG_DEVFREQ_GOV_MEMLAT is not set
+# CONFIG_SCHED_AUTOGROUP is not set # some workloads periods of freezing & excessive jank
 
 # disable workarounds NOT applicable to our hardware (modified cortex A55, A73)
 # CONFIG_ARM64_ERRATUM_826319 is not set
