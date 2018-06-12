@@ -946,6 +946,9 @@ CONFIG_MSM_RMNET_MHI=y
 # CONFIG_DEVPORT is not set
 CONFIG_USB_HOST_NOTIFY=y
 
+# necessary for basic funcationality/DD features
+CONFIG_DUMMY=y # WiFi calling (?)
+
 # exfat opensource'd Samsung exfat leaked driver
 # CONFIG_EXFAT_FS is not set
 CONFIG_EXFAT_DEFAULT_CODEPAGE=437
@@ -1116,3 +1119,7 @@ CONFIG_MSM_11AD=m
 
 # queue:
 ### CONFIG_MSM_SMP2P_TEST=y
+
+# eval:
+### CONFIG_MSM_GLADIATOR_ERP_V2=y
+### CONFIG_PANIC_ON_GLADIATOR_ERROR_V2=y
