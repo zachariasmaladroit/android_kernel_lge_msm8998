@@ -995,3 +995,6 @@ CONFIG_LOG_CPU_MAX_BUF_SHIFT=21
 # raise security
 CONFIG_DEBUG_SET_MODULE_RONX=y
 CONFIG_DEBUG_RODATA=y
+
+# disable unnecessary components, speed up boot & operation
+# CONFIG_SEEMP_CORE is not set
