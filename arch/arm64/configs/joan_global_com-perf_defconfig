@@ -877,7 +877,7 @@ CONFIG_SND_USE_QUAT_MI2S=y
 CONFIG_SND_SOC_ES9018=n
 CONFIG_SND_SOC_ES9218P=y
 CONFIG_SND_FM_RX_MI2S=y
-CONFIG_TSPDRV=y
+
 CONFIG_SND_LGE_DSDP_DUAL_AUDIO=y
 #CONFIG_LGE_HALL_IC is not set
 CONFIG_LGE_DIAG_BYPASS=y
@@ -1004,3 +1004,8 @@ CONFIG_DEFAULT_BIC=y
 # CONFIG_DEFAULT_WVEGAS is not set
 # CONFIG_DEFAULT_RENO is not set
 CONFIG_DEFAULT_TCP_CONG="bic"
+
+# Immersion TouchSense Haptics driver
+# disable for big-ass kernel compilation, troubleshoot & fix later
+#
+# CONFIG_TSPDRV is not set
