@@ -1012,7 +1012,7 @@ CONFIG_LOG_CPU_MAX_BUF_SHIFT=21
 CONFIG_DEBUG_INFO_REDUCED=y
 
 # disable security related logging, debug, etc.
-# CONFIG_SECURITY_SELINUX_DEVELOP is not set
+CONFIG_SECURITY_SELINUX_DEVELOP=y # might be needed to get permissive for now
 # CONFIG_SECURITY_SELINUX_AVC_STATS is not set
 
 # raise security
