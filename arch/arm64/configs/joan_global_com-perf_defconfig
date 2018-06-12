@@ -998,3 +998,15 @@ CONFIG_DEBUG_RODATA=y
 
 # disable unnecessary components, speed up boot & operation
 # CONFIG_SEEMP_CORE is not set
+
+# disable workarounds NOT applicable to our hardware (modified cortex A55, A73)
+# CONFIG_ARM64_ERRATUM_826319 is not set
+# CONFIG_ARM64_ERRATUM_827319 is not set
+# CONFIG_ARM64_ERRATUM_824069 is not set
+# CONFIG_ARM64_ERRATUM_819472 is not set
+# CONFIG_ARM64_ERRATUM_832075 is not set
+# CONFIG_ARM64_ERRATUM_845719 is not set
+# CONFIG_ARM64_ERRATUM_843419 is not set
+# CONFIG_CAVIUM_ERRATUM_22375 is not set
+# CONFIG_CAVIUM_ERRATUM_23154 is not set
+# CONFIG_CAVIUM_ERRATUM_27456 is not set
