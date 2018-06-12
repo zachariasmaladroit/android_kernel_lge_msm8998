@@ -687,10 +687,10 @@ tfa_probe(unsigned char slave_address, tfa98xx_handle_t *p_handle)
 		handles_local[idx].rev = (unsigned short) rev;
 		*p_handle = idx;
 		error = TFA98XX_ERROR_OK;
-#ifdef __KERNEL__ /* don't spam userspace with information */
-		tfa98xx_trace_printk("slave:0x%02x revid:0x%04x\n", slave_address, rev);
-		pr_debug("slave:0x%02x revid:0x%04x\n", slave_address, rev);
-#endif
+//#ifdef __KERNEL__ /* don't spam userspace with information */
+//		tfa98xx_trace_printk("slave:0x%02x revid:0x%04x\n", slave_address, rev);
+//		pr_debug("slave:0x%02x revid:0x%04x\n", slave_address, rev);
+//#endif
 		break;
 	default:
 		pr_info("Unknown slave adress! \n");
@@ -3399,11 +3399,11 @@ enum tfa98xx_error tfa_run_speaker_boost(tfa98xx_handle_t handle, int force, int
 		__func__, value ? "cold" : "warm",
 		handles_local[handle].ext_dsp, profile);
 
-#ifdef __KERNEL__ /* TODO try to combine this with the pr_debug below */
-	tfa98xx_trace_printk("%s %sstart\n",
-	             tfa_cont_device_name(handle),
-	             value ? "cold" : "warm");
-#endif
+//#ifdef __KERNEL__ /* TODO try to combine this with the pr_debug below */
+//	tfa98xx_trace_printk("%s %sstart\n",
+//	             tfa_cont_device_name(handle),
+//	             value ? "cold" : "warm");
+//#endif
 
 	/* Check if next profile is a tap profile */
 	istap_prof = tfa_cont_is_tap_profile(handle, profile);

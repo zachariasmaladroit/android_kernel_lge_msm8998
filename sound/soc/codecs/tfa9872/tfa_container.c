@@ -1629,10 +1629,10 @@ enum tfa98xx_error tfa_cont_write_profile(int dev_idx, int prof_idx, int vstep_i
 		return TFA98XX_ERROR_BAD_PARAMETER;
 	}
 
-	if ( tfa98xx_cnt_verbose ) {
-		tfa98xx_trace_printk("device:%s profile:%s vstep:%d\n", tfa_cont_device_name(dev_idx),
-					tfa_cont_profile_name(dev_idx,prof_idx),vstep_idx);
-	}
+//	if ( tfa98xx_cnt_verbose ) {
+//		tfa98xx_trace_printk("device:%s profile:%s vstep:%d\n", tfa_cont_device_name(dev_idx),
+//					tfa_cont_profile_name(dev_idx,prof_idx),vstep_idx);
+//	}
 
 	/* Get the slave */
 	err = tfa_cont_get_slave(dev_idx, &slave_address);
@@ -1865,9 +1865,10 @@ enum tfa98xx_error tfa_cont_write_files_vstep(int dev_idx, int prof_idx, int vst
 	if ( !prof )
 		return TFA98XX_ERROR_BAD_PARAMETER;
 
-	if ( tfa98xx_cnt_verbose )
-		tfa98xx_trace_printk("device:%s profile:%s vstep:%d\n", tfa_cont_device_name(dev_idx),
-					tfa_cont_profile_name(dev_idx,prof_idx),vstep_idx);
+//	if ( tfa98xx_cnt_verbose ) {
+//		tfa98xx_trace_printk("device:%s profile:%s vstep:%d\n", tfa_cont_device_name(dev_idx),
+//					tfa_cont_profile_name(dev_idx,prof_idx),vstep_idx);
+//	}
 
 	/* write vstep file only! */
 	for(i=0;i<prof->length;i++) {
