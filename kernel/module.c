@@ -1299,6 +1299,12 @@ static int check_version(Elf_Shdr *sechdrs,
 	if(!strncmp("texfat", mod->name, 6))
 		return 0;
 
+	if(!strncmp("ufs_test", mod->name, 8))
+		return 0;
+
+	if(!strncmp("rdbg", mod->name, 4))
+		return 0;
+
 	/* Exporting module didn't supply crcs?  OK, we're already tainted. */
 	if (!crc)
 		return 1;
