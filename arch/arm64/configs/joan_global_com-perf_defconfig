@@ -999,10 +999,15 @@ CONFIG_LOG_CPU_MAX_BUF_SHIFT=21
 
 # disable for debug, security, attack surface
 # CONFIG_MSM_RDBG is not set
+# CONFIG_MAGIC_SYSRQ is not set
 
 # disable debug/strip/shrink kernel
 # CONFIG_KALLSYMS_ALL is not set
 CONFIG_DEBUG_INFO_REDUCED=y
+
+# disable security related logging, debug, etc.
+# CONFIG_SECURITY_SELINUX_DEVELOP is not set
+# CONFIG_SECURITY_SELINUX_AVC_STATS is not set
 
 # raise security
 CONFIG_DEBUG_SET_MODULE_RONX=y
