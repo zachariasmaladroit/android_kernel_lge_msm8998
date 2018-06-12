@@ -991,14 +991,24 @@ CONFIG_LOG_CPU_MAX_BUF_SHIFT=21
 # CONFIG_IOMMU_TESTS is not set
 # CONFIG_ICNSS_DEBUG is not set
 # CONFIG_FEATURE_TSO_DEBUG is not set
+# CONFIG_ALLOW_DEV_COREDUMP is not set
 
 # raise security
 CONFIG_DEBUG_SET_MODULE_RONX=y
 CONFIG_DEBUG_RODATA=y
 CONFIG_ARM64_PAN=y
 
-# disable unnecessary components, speed up boot & operation
+# disable unnecessary/not applicable components, speed up boot & operation
 # CONFIG_SEEMP_CORE is not set
+# CONFIG_CPU_IDLE_GOV_LADDER is not set
+# CONFIG_USB_NET_DRIVERS is not set
+# CONFIG_VGA_ARB is not set
+# CONFIG_SND_SUPPORT_OLD_API is not set
+# CONFIG_SND_VERBOSE_PROCFS is not set
+# CONFIG_SND_DRIVERS is not set
+# CONFIG_MSM_BOOT_STATS is not set
+# CONFIG_ARM_MEMLAT_MON is not set
+# CONFIG_DEVFREQ_GOV_MEMLAT is not set
 
 # disable workarounds NOT applicable to our hardware (modified cortex A55, A73)
 # CONFIG_ARM64_ERRATUM_826319 is not set
@@ -1017,3 +1027,4 @@ CONFIG_ARM64_PAN=y
 # CONFIG_SWP_EMULATION is not set
 # CONFIG_CP15_BARRIER_EMULATION is not set
 # CONFIG_SETEND_EMULATION is not set
+
