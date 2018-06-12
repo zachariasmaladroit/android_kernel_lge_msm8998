@@ -995,6 +995,7 @@ CONFIG_LOG_CPU_MAX_BUF_SHIFT=21
 # raise security
 CONFIG_DEBUG_SET_MODULE_RONX=y
 CONFIG_DEBUG_RODATA=y
+CONFIG_ARM64_PAN=y
 
 # disable unnecessary components, speed up boot & operation
 # CONFIG_SEEMP_CORE is not set
@@ -1011,7 +1012,7 @@ CONFIG_DEBUG_RODATA=y
 # CONFIG_CAVIUM_ERRATUM_23154 is not set
 # CONFIG_CAVIUM_ERRATUM_27456 is not set
 
-# disable legacy emulation, compatibility
+# disable legacy emulation, compatibility w.r.t. ARMv8
 # CONFIG_ARMV8_DEPRECATED is not set
 # CONFIG_SWP_EMULATION is not set
 # CONFIG_CP15_BARRIER_EMULATION is not set
