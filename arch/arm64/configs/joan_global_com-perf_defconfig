@@ -1010,3 +1010,9 @@ CONFIG_DEBUG_RODATA=y
 # CONFIG_CAVIUM_ERRATUM_22375 is not set
 # CONFIG_CAVIUM_ERRATUM_23154 is not set
 # CONFIG_CAVIUM_ERRATUM_27456 is not set
+
+# disable legacy emulation, compatibility
+# CONFIG_ARMV8_DEPRECATED is not set
+# CONFIG_SWP_EMULATION is not set
+# CONFIG_CP15_BARRIER_EMULATION is not set
+# CONFIG_SETEND_EMULATION is not set
