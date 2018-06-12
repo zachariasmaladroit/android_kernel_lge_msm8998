@@ -1,5 +1,4 @@
-### GCC 6.2
-### I'm using Linaro 6.2 toolchain
+### Google 4.9 TC
 
 #export USE_CCACHE=1
 
@@ -9,8 +8,8 @@ export KBUILD_BUILD_USER=zacharias.maladroit
 export KBUILD_BUILD_HOST=BuildHost
 
 export ARCH=arm64
-export PATH=~/android/toolchains/arter97_linaro-64_6.2/bin/:$PATH
-export CROSS_COMPILE=aarch64-linux-gnu-
+export PATH=~/android/toolchains/aarch64-linux-android-4.9_google_07.2017/bin/:$PATH
+export CROSS_COMPILE=aarch64-linux-android-
 
 make joan_global_com-perf_defconfig
 ###make oldconfig
