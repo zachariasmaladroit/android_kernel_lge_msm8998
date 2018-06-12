@@ -949,6 +949,9 @@ CONFIG_USB_HOST_NOTIFY=y
 # necessary for basic funcationality/DD features
 CONFIG_DUMMY=y # WiFi calling (?)
 
+# ease of use, convenient
+CONFIG_IKCONFIG_PROC=y
+
 # exfat opensource'd Samsung exfat leaked driver
 # CONFIG_EXFAT_FS is not set
 CONFIG_EXFAT_DEFAULT_CODEPAGE=437
