@@ -998,6 +998,40 @@ CONFIG_DEBUG_SET_MODULE_RONX=y
 CONFIG_DEBUG_RODATA=y
 CONFIG_ARM64_PAN=y
 
+# Perform additional validation of various commonly targeted structures.
+CONFIG_DEBUG_NOTIFIERS=y
+CONFIG_DEBUG_LIST=y
+CONFIG_DEBUG_SG=y
+CONFIG_SCHED_STACK_END_CHECK=y
+
+# Provide userspace with ptrace ancestry protections.
+CONFIG_SECURITY=y
+CONFIG_SECURITY_YAMA=y
+
+# Perform usercopy bounds checking. (And disable fallback to gain full whitelist enforcement.)
+CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR=y
+CONFIG_HAVE_ARCH_HARDENED_USERCOPY=y
+CONFIG_HARDENED_USERCOPY=y
+# CONFIG_HARDENED_USERCOPY_PAGESPAN is not set
+# CONFIG_HARDENED_USERCOPY_FALLBACK is not set # upstream
+
+# Allow allocator validation checking to be enabled (see "slub_debug=P" below).
+CONFIG_SLUB_DEBUG=y
+
+# ASLR, randomization, etc.
+CONFIG_ARCH_MMAP_RND_BITS_MIN=24
+CONFIG_ARCH_MMAP_RND_BITS_MAX=28
+CONFIG_ARCH_MMAP_RND_BITS=24
+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
+
+# pending security features (currently NOP, missing source)
+CONFIG_MSM_KERNEL_PROTECT=y
+# Check for memory copies that might overflow a structure in str*() and mem*() functions both at build-time and run-time.
+CONFIG_FORTIFY_SOURCE=y
+
+# Prior to v4.1, assists heap memory attacks; best to keep interface disabled.
+# CONFIG_INET_DIAG is not set
+
 # disable unnecessary/not applicable components, speed up boot & operation
 # CONFIG_SEEMP_CORE is not set
 # CONFIG_CPU_IDLE_GOV_LADDER is not set
@@ -1032,3 +1066,7 @@ CONFIG_ARM64_PAN=y
 # CONFIG_CP15_BARRIER_EMULATION is not set
 # CONFIG_SETEND_EMULATION is not set
 
+# Wakelock Blocker
+# needs to be set up, doesn't block anything by default
+#
+CONFIG_BOEFFLA_WL_BLOCKER=y
