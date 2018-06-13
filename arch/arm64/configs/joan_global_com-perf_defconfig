@@ -946,9 +946,8 @@ CONFIG_MSM_RMNET_MHI=y
 # CONFIG_DEVPORT is not set
 CONFIG_USB_HOST_NOTIFY=y
 
-# necessary for basic functionality/DD features, crucial for operation
+# necessary for basic funcationality/DD features
 CONFIG_DUMMY=y # WiFi calling (?)
-CONFIG_LGE_PM_DEBUG=y
 
 # ease of use, convenient
 CONFIG_IKCONFIG_PROC=y
@@ -988,7 +987,7 @@ CONFIG_LOG_BUF_SHIFT=22
 CONFIG_LOG_CPU_MAX_BUF_SHIFT=21
 
 # disable debug stuff
-
+# CONFIG_LGE_PM_DEBUG is not set
 # CONFIG_MSM_SDE_ROTATOR_EVTLOG_DEBUG is not set
 # CONFIG_FB_MSM_MDSS_XLOG_DEBUG is not set
 # CONFIG_IOMMU_DEBUG is not set
