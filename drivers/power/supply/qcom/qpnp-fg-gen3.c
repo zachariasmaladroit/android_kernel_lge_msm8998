@@ -2259,12 +2259,7 @@ static int fg_charge_full_update(struct fg_chip *chip)
 		pr_err("Error in getting msoc, rc=%d\n", rc);
 		goto out;
 	}
-
-	rc = fg_get_msoc_raw(chip, &msoc_raw);
-	if (rc < 0) {
-		pr_err("Error in getting msoc_raw, rc=%d\n", rc);
-		goto out;
-	}
+	msoc_raw = DIV_ROUND_CLOSEST(msoc * FULL_SOC_RAW, FULL_CAPACITY);
 
 	fg_dbg(chip, FG_STATUS, "msoc: %d bsoc: %x health: %d status: %d full: %d\n",
 		msoc, bsoc, chip->health, chip->charge_status,
