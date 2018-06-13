@@ -816,7 +816,7 @@ CONFIG_CRYPTO_TWOFISH=y
 CONFIG_CRYPTO_ANSI_CPRNG=y
 CONFIG_CRYPTO_DEV_QCRYPTO=y
 CONFIG_CRYPTO_DEV_QCOM_MSM_QCE=y
-CONFIG_CRYPTO_DEV_QCEDEV=y
+
 CONFIG_CRYPTO_DEV_OTA_CRYPTO=y
 CONFIG_CRYPTO_DEV_QCOM_ICE=y
 CONFIG_SYSTEM_TRUSTED_KEYS="verity.x509.pem"
@@ -1002,6 +1002,7 @@ CONFIG_LGE_PM_DEBUG=y
 # CONFIG_MSM_TZ_LOG is not set
 # CONFIG_TRACER_PKT is not set
 # CONFIG_QCOM_REMOTEQDSS is not set
+# CONFIG_QCOM_COMMON_LOG is not set
 
 # disable for debug, security, attack surface
 # CONFIG_MSM_RDBG is not set
@@ -1073,6 +1074,19 @@ CONFIG_SCHED_AUTOGROUP=y # some workloads periods of freezing & excessive jank
 # CONFIG_QCOM_RTB_SEPARATE_CPUS is not set
 # CONFIG_MMC_PERF_PROFILING is not set
 # CONFIG_IOSCHED_TEST is not set
+# CONFIG_MSM_GLADIATOR_ERP_V2 is not set
+# CONFIG_PANIC_ON_GLADIATOR_ERROR_V2 is not set
+# CONFIG_MSM_GLADIATOR_ERROR_V2_MAIN_LOGGER_ONLY is not set
+# CONFIG_MSM_GLADIATOR_HANG_DETECT is not set
+# CONFIG_MSM_CORE_HANG_DETECT is not set
+# CONFIG_EDAC_CORTEX_ARM64 is not set
+# CONFIG_EDAC_CORTEX_ARM64_PANIC_ON_CE is not set
+# CONFIG_EDAC_CORTEX_ARM64_DBE_IRQ_ONLY is not set
+# CONFIG_EDAC_CORTEX_ARM64_PANIC_ON_UE is not set
+# CONFIG_MPC_UT_FRAMEWORK is not set # qcacld-3.0 $(HDD_SRC_DIR)/wlan_hdd_conc_ut.o
+# CONFIG_QCOM_DCC is not set # QCOM Data Capture and Compare enigne support
+# CONFIG_MSM_BOOT_STATS is not set
+# CONFIG_QCOM_CPUSS_DUMP is not set
 
 # disable workarounds NOT applicable to our hardware (modified cortex A55, A73)
 # CONFIG_ARM64_ERRATUM_826319 is not set
@@ -1132,6 +1146,5 @@ CONFIG_RCU_EXPEDITE_BOOT=y # speed up boot (10-15% speed is to be expected accor
 ### CONFIG_MSM_SMP2P_TEST=y
 
 # eval:
-### CONFIG_MSM_GLADIATOR_ERP_V2=y
-### CONFIG_PANIC_ON_GLADIATOR_ERROR_V2=y
+CONFIG_CRYPTO_DEV_QCEDEV=y
 
