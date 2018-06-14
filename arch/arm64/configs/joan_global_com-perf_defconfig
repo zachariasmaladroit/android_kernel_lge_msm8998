@@ -993,7 +993,7 @@ CONFIG_LGE_PM_DEBUG=y
 # CONFIG_MSM_RPM_LOG is not set
 
 # disable debug/strip/shrink kernel
-# CONFIG_KALLSYMS_ALL is not set
+CONFIG_KALLSYMS_ALL=y
 
 # raise security
 CONFIG_DEBUG_SET_MODULE_RONX=y
@@ -1078,7 +1078,7 @@ CONFIG_SCHED_AUTOGROUP=y # some workloads periods of freezing & excessive jank
 CONFIG_BOEFFLA_WL_BLOCKER=y
 
 # add additional drivers that might be needed
-CONFIG_RELAY=y
+# CONFIG_RELAY is not set
 
 # swap, zram related settings
-CONFIG_BALANCE_ANON_FILE_RECLAIM=y
+# CONFIG_BALANCE_ANON_FILE_RECLAIM is not set
