@@ -1145,6 +1145,9 @@ CONFIG_RCU_BOOST_DELAY=500
 CONFIG_RCU_KTHREAD_PRIO=6
 CONFIG_RCU_EXPEDITE_BOOT=y # speed up boot (10-15% speed is to be expected according to upstream)
 
+# Workqueues
+CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
+
 
 # queue:
 ### CONFIG_MSM_SMP2P_TEST=y
