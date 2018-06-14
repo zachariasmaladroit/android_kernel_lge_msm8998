@@ -993,7 +993,7 @@ CONFIG_LGE_PM_DEBUG=y
 # CONFIG_MSM_RPM_LOG is not set
 
 # disable debug/strip/shrink kernel
-# CONFIG_KALLSYMS_ALL is not set
+CONFIG_KALLSYMS_ALL=y
 
 # raise security
 CONFIG_DEBUG_SET_MODULE_RONX=y
