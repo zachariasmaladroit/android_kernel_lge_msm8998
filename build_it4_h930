@@ -1,21 +1,48 @@
-### Google 4.9 TC
+# Note: full-automatic kernel-build doesn't work, ramdisk + kernel cooking needs superr-kitchen
+# AIK (with same steps like in superr does NOT lead to booting kernel)
 
-#export USE_CCACHE=1
+### Linar 7.2 TC
 
-#export CACHE_DIR=~/.ccache
+## Linaro 7.3 TC with binutils 2.30 has issues during linking, waiting for newer ld
+
+# (Linaro?) 7.x toolchain has issues with SMS (modulo-sched) flags and quits with internal compiler error
+
 
 ###make oldconfig
+
+export USE_CCACHE=1
+
+export CACHE_DIR=~/.ccache
+
 
 export KBUILD_BUILD_USER=zacharias.maladroit
 export KBUILD_BUILD_HOST=BuildHost
 
 export ARCH=arm64
-export PATH=~/android/toolchains/aarch64-linux-android-4.9_google_07.2017/bin/:$PATH
-export CROSS_COMPILE=aarch64-linux-android-
+export PATH=~/android/toolchains/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin/:$PATH
+CROSS_COMPILE=aarch64-linux-gnu-
+#export CROSS_COMPILE=aarch64-linux-android-
 
 make joan_global_com-perf_defconfig
 
 time make -j8
+
+# superr-kitchen steps:
+# opening boot.img in superr
+# deleting old boot.img-zImage
+# copying over new boot.img-zImage (Image.gz-dtb)
+
+
+sudo rm ~/android/superrs-kitchen/superr_v30_stock/bootimg/split_img/boot.img-zImage
+
+sudo cp arch/arm64/boot/Image.gz-dtb ~/android/superrs-kitchen/superr_v30_stock/bootimg/split_img/boot.img-zImage
+
+
+
+cd ~/android/superrs-kitchen/superr_v30_stock
+fastboot boot boot.img
+
+
 
 #echo "generating device tree..."
 #make dtbs
