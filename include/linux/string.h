@@ -182,6 +182,16 @@ static inline const char *kbasename(const char *path)
 #define __RENAME(x) __asm__(#x)
 
 void fortify_panic(const char *name) __noreturn __cold;
+
+/* work around GCC PR82365 */
+#if defined(CONFIG_KASAN) && !defined(__clang__) && GCC_VERSION <= 80000
+#define fortify_panic(x) \
+	do { \
+		asm volatile(""); \
+		fortify_panic(x); \
+	} while (0)
+#endif
+
 void __read_overflow(void) __compiletime_error("detected read beyond size of object passed as 1st parameter");
 void __read_overflow2(void) __compiletime_error("detected read beyond size of object passed as 2nd parameter");
 void __read_overflow3(void) __compiletime_error("detected read beyond size of object passed as 3rd parameter");
