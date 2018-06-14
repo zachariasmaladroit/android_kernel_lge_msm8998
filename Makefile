@@ -345,10 +345,42 @@ export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
 scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
+# Set optimization flags for gcc
+CC_FLAGS := -Os \
+	-fno-schedule-insns \
+	-flive-range-shrinkage \
+	-fshrink-wrap -fshrink-wrap-separate -mtune=cortex-a73.cortex-a53 \
+	-march=armv8-a+crypto+crc \
+	-fivopts \
+	-finline-small-functions -fpartial-inlining -findirect-inlining \
+	-foptimize-sibling-calls \
+	-fdevirtualize -fdevirtualize-speculatively \
+	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
+	-ftree-loop-im -funswitch-loops \
+	-fpredictive-commoning \
+	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
+	-Wno-maybe-uninitialized -Wno-misleading-indentation \
+	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
+
+LD_FLAGS := -Os --sort-common --strip-debug
+
+# -fmodulo-sched -fmodulo-sched-allow-regmoves
+#
+#	-fira-loop-pressure -ftree-vectorize \
+#	-ftree-loop-distribution -ftree-loop-distribute-patterns \
+#	-fgraphite -fgraphite-identity -floop-strip-mine -floop-block \
+#	-ftree-loop-ivcanon \
+#
+#   -fmodulo-sched -fmodulo-sched-allow-regmoves
+#	-fgraphite -fgraphite-identity -floop-strip-mine \
+#   -floop-block
+
+# Make variables (CC, etc...)
+
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
-CC		= $(CCACHE) $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld $(LD_FLAGS)
+CC		= $(CCACHE) $(CROSS_COMPILE)gcc $(CC_FLAGS)
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -401,6 +433,10 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
+		   -fdiagnostics-color=always \
+		   -fno-delete-null-pointer-checks \
+		   -ftree-vrp -fisolate-erroneous-paths-dereference \
+		   -fno-pic \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 
 
