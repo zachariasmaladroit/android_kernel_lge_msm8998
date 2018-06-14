@@ -1000,8 +1000,8 @@ CONFIG_ARM64_PAN=y
 
 # Perform additional validation of various commonly targeted structures.
 CONFIG_DEBUG_NOTIFIERS=y
-CONFIG_DEBUG_LIST=y
-CONFIG_DEBUG_SG=y
+# CONFIG_DEBUG_LIST is not set
+# CONFIG_DEBUG_SG is not set
 CONFIG_SCHED_STACK_END_CHECK=y
 
 # Provide userspace with ptrace ancestry protections.
