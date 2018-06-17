@@ -1017,6 +1017,7 @@ CONFIG_FUNCTION_TRACER=y # default on
 #### CONFIG_FUNCTION_GRAPH_TRACER
 #### CONFIG_STACK_TRACER
 CONFIG_DYNAMIC_FTRACE=y # convert trace calls to NOP, 0% overhead 100% performance
+CONFIG_DISABLE_TRACE_PRINTK=y
 
 # disable security related logging, debug, etc.
 CONFIG_SECURITY_SELINUX_DEVELOP=y # might be needed to get permissive for now
