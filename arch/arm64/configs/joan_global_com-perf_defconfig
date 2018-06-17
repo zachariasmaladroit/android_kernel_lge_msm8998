@@ -1013,7 +1013,7 @@ CONFIG_KALLSYMS_ALL=y # needed on Stock for successful booting
 CONFIG_DEBUG_INFO_REDUCED=y
 
 # Ftrace
-CONFIG_FUNCTION_TRACER=y # default on
+# CONFIG_FUNCTION_TRACER is not set # default on
 #### CONFIG_FUNCTION_GRAPH_TRACER
 #### CONFIG_STACK_TRACER
 CONFIG_DYNAMIC_FTRACE=y # convert trace calls to NOP, 0% overhead 100% performance
