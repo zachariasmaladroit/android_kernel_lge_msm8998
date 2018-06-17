@@ -18,9 +18,9 @@ export CACHE_DIR=~/.ccache
 export KBUILD_BUILD_USER=zacharias.maladroit
 export KBUILD_BUILD_HOST=BuildHost
 
-export ARCH=arm64
 export PATH=~/android/toolchains/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin/:$PATH
-CROSS_COMPILE=aarch64-linux-gnu-
+export ARCH=arm64
+export CROSS_COMPILE=aarch64-linux-gnu-
 #export CROSS_COMPILE=aarch64-linux-android-
 
 make joan_global_com-perf_defconfig
