@@ -356,15 +356,23 @@ CC_FLAGS := -Os \
 	-foptimize-sibling-calls \
 	-fdevirtualize -fdevirtualize-speculatively \
 	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
-	-ftree-loop-im -funswitch-loops \
-	-fpredictive-commoning \
 	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
+	-fmodulo-sched -fmodulo-sched-allow-regmoves \
+	-fno-unwind-tables -fno-asynchronous-unwind-tables \
+	-fexceptions \
+	-fno-delete-null-pointer-checks \
+    -ftree-vrp -fisolate-erroneous-paths-dereference \
 	-Wno-maybe-uninitialized -Wno-misleading-indentation \
 	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
 
 LD_FLAGS := -Os --sort-common --strip-debug
 
 # -fmodulo-sched -fmodulo-sched-allow-regmoves
+# -ftree-loop-im -funswitch-loops \
+# -fpredictive-commoning \
+# -fexceptions = Enable table-based thread cancellation
+#
+#    -fcf-protection=full -fstack-clash-protection \ #x86 only #not on armhfp/ARMv7, similar to fstack-check (problematic)
 #
 #	-fira-loop-pressure -ftree-vectorize \
 #	-ftree-loop-distribution -ftree-loop-distribute-patterns \
@@ -436,6 +444,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fdiagnostics-color=always \
 		   -fno-delete-null-pointer-checks \
 		   -ftree-vrp -fisolate-erroneous-paths-dereference \
+		   -fcf-protection=full -fstack-clash-protection \
 		   -fno-pic \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 
