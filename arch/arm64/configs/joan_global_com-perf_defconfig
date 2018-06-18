@@ -1113,11 +1113,12 @@ CONFIG_SCHED_AUTOGROUP=y # some workloads periods of freezing & excessive jank
 # CONFIG_CAVIUM_ERRATUM_23154 is not set
 # CONFIG_CAVIUM_ERRATUM_27456 is not set
 
-# disable legacy emulation, compatibility w.r.t. ARMv8
-# CONFIG_ARMV8_DEPRECATED is not set
-# CONFIG_SWP_EMULATION is not set
-# CONFIG_CP15_BARRIER_EMULATION is not set
-# CONFIG_SETEND_EMULATION is not set
+# keep legacy emulation, compatibility w.r.t. ARMv8
+# disabling breaks WeChat (crash on startup) and others ...
+CONFIG_ARMV8_DEPRECATED=y
+CONFIG_SWP_EMULATION=y
+CONFIG_CP15_BARRIER_EMULATION=y
+CONFIG_SETEND_EMULATION=y
 
 # Wakelock Blocker
 # needs to be set up, doesn't block anything by default
