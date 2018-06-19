@@ -357,7 +357,6 @@ CC_FLAGS := -Os \
 	-fdevirtualize -fdevirtualize-speculatively \
 	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
 	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
-	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 	-fno-unwind-tables -fno-asynchronous-unwind-tables \
 	-fexceptions \
 	-fno-delete-null-pointer-checks \
