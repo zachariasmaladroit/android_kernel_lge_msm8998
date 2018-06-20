@@ -352,7 +352,6 @@ CC_FLAGS := -Os \
 	-mtune=cortex-a73.cortex-a53 \
 	-march=armv8-a+crypto+crc \
 	-fivopts \
-	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 	-fno-unwind-tables -fno-asynchronous-unwind-tables \
 	-fno-delete-null-pointer-checks \
 	-Wno-maybe-uninitialized -Wno-misleading-indentation \
