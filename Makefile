@@ -348,24 +348,28 @@ include scripts/Kbuild.include
 # Set optimization flags for gcc
 CC_FLAGS := -Os \
 	-fno-schedule-insns \
-	-flive-range-shrinkage \
-	-fshrink-wrap -fshrink-wrap-separate -mtune=cortex-a73.cortex-a53 \
+	-fshrink-wrap -fshrink-wrap-separate \
+	-mtune=cortex-a73.cortex-a53 \
 	-march=armv8-a+crypto+crc \
 	-fivopts \
-	-finline-small-functions -fpartial-inlining -findirect-inlining \
-	-foptimize-sibling-calls \
-	-fdevirtualize -fdevirtualize-speculatively \
-	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
-	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
+	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 	-fno-unwind-tables -fno-asynchronous-unwind-tables \
-	-fexceptions \
 	-fno-delete-null-pointer-checks \
-    -ftree-vrp -fisolate-erroneous-paths-dereference \
 	-Wno-maybe-uninitialized -Wno-misleading-indentation \
 	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
 
 LD_FLAGS := -Os --sort-common --strip-debug
 
+# remove flags:
+#	-flive-range-shrinkage \
+#	-finline-small-functions -fpartial-inlining -findirect-inlining \
+#	-foptimize-sibling-calls \
+#	-fdevirtualize -fdevirtualize-speculatively \
+#	-fgcse -fgcse-lm -fgcse-sm -fgcse-las -fgcse-after-reload \
+#	-fipa-cp -fipa-bit-cp -fipa-vrp -fipa-sra -fipa-icf -fipa-ra \
+#	-fexceptions \
+#   -ftree-vrp -fisolate-erroneous-paths-dereference \
+#
 # -fmodulo-sched -fmodulo-sched-allow-regmoves
 # -ftree-loop-im -funswitch-loops \
 # -fpredictive-commoning \
@@ -442,7 +446,6 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fdiagnostics-color=always \
 		   -fno-delete-null-pointer-checks \
-		   -ftree-vrp -fisolate-erroneous-paths-dereference \
 		   -fno-pic \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 
