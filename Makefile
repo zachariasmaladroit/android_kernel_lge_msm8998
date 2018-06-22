@@ -352,7 +352,6 @@ CC_FLAGS := -Os \
 	-mtune=cortex-a73.cortex-a53 \
 	-march=armv8-a+crypto+crc \
 	-fivopts \
-	-fno-unwind-tables -fno-asynchronous-unwind-tables \
 	-fno-delete-null-pointer-checks \
 	-Wno-maybe-uninitialized -Wno-misleading-indentation \
 	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
@@ -360,6 +359,8 @@ CC_FLAGS := -Os \
 LD_FLAGS := -Os --sort-common --strip-debug
 
 # remove flags:
+#	-fno-unwind-tables -fno-asynchronous-unwind-tables \
+#
 #	-flive-range-shrinkage \
 #	-finline-small-functions -fpartial-inlining -findirect-inlining \
 #	-foptimize-sibling-calls \
