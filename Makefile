@@ -347,11 +347,10 @@ include scripts/Kbuild.include
 
 # Set optimization flags for gcc
 CC_FLAGS := -Os \
-	-fno-schedule-insns \
-	-fshrink-wrap -fshrink-wrap-separate \
 	-mtune=cortex-a73.cortex-a53 \
 	-march=armv8-a+crypto+crc \
 	-fivopts \
+	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 	-fno-delete-null-pointer-checks \
 	-Wno-maybe-uninitialized -Wno-misleading-indentation \
 	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
@@ -359,6 +358,11 @@ CC_FLAGS := -Os \
 LD_FLAGS := -Os --sort-common --strip-debug
 
 # remove flags:
+#
+#	-fno-schedule-insns \
+#	-fshrink-wrap -fshrink-wrap-separate \
+#
+#
 #	-fno-unwind-tables -fno-asynchronous-unwind-tables \
 #
 #	-flive-range-shrinkage \
