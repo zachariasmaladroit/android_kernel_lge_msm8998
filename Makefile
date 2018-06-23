@@ -350,7 +350,6 @@ CC_FLAGS := -Os \
 	-mtune=cortex-a73.cortex-a53 \
 	-march=armv8-a+crypto+crc \
 	-fivopts \
-	-fmodulo-sched -fmodulo-sched-allow-regmoves \
 	-fno-delete-null-pointer-checks \
 	-Wno-maybe-uninitialized -Wno-misleading-indentation \
 	-Wno-array-bounds -Wno-shift-overflow -std=gnu89
