@@ -76,7 +76,6 @@
 #include <linux/aio.h>
 #include <linux/compiler.h>
 #include <linux/sysctl.h>
-#include <linux/kcov.h> // wahoo
 #include <linux/cpufreq.h>
 #include <linux/cpu_input_boost.h>
 
