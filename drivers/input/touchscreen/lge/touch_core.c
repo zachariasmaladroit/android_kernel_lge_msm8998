@@ -578,10 +578,10 @@ static void touch_send_uevent(struct touch_core_data *ts, int type)
 	}
 	if (type == LPWG_DOUBLE_TAP) {
 		input_report_key(ts->input, KEY_WAKEUP, 1);
-		TOUCH_I("Simulate power button depress\n");
+		TOUCH_I("Simulate power button depress");
 		input_sync(ts->input);
 		input_report_key(ts->input, KEY_WAKEUP, 0);
-		TOUCH_I("Simulate power button release\n");
+		TOUCH_I("Simulate power button release");
 		input_sync(ts->input);
 	}
 }
