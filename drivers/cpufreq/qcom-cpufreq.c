@@ -37,7 +37,7 @@ static DEFINE_PER_CPU(struct cpufreq_frequency_table *, freq_table);
 static bool hotplug_ready;
 
 /* Amount of time to boost all online CPUs upon exiting deep sleep */
-#define PM_WAKE_BOOST_MS (20)
+#define PM_WAKE_BOOST_MS (500)
 static bool is_boosted;
 static bool suspended_once;
 static struct mutex cpu_clk_lock;
