@@ -975,14 +975,13 @@ CONFIG_FB_MSM_MDSS_KCAL_CTRL=y
 
 # CPU_INPUT_BOOST vs. CPU_BOOST (incl. dynamic SchedTune Boost) - pick one
 # option 1 (cpu_input_boost):
-# CONFIG_CPU_INPUT_BOOST is not set
+CONFIG_CPU_INPUT_BOOST=y
 CONFIG_INPUT_BOOST_DURATION_MS=64
-CONFIG_WAKE_BOOST_DURATION_MS=1000
 CONFIG_INPUT_BOOST_FREQ_LP=1171200
 CONFIG_INPUT_BOOST_FREQ_PERF=499200
 # option 2 (cpu_boost +  dynamic_stune_boost)
-CONFIG_CPU_BOOST=y # utilizes input_boost w. msm_performance
-CONFIG_DYNAMIC_STUNE_BOOST=y
+# CONFIG_CPU_BOOST is not set
+# CONFIG_DYNAMIC_STUNE_BOOST is not set
 
 # raise size of kernel log
 CONFIG_LOG_BUF_SHIFT=22
