@@ -51,13 +51,6 @@
 #define SIOCIOCTLTX99 (SIOCDEVPRIVATE+13)
 #endif
 
-#ifdef FEATURE_SUPPORT_LGE
-/*LGE_CHNAGE_S, DRIVER scan_suppress command, 2017-06-12, moon-wifi@lge.com*/
-#include <asm/types.h>
-#include <cds_mq.h>
-/*LGE_CHNAGE_E, DRIVER scan_suppress command, 2017-06-12, moon-wifi@lge.com*/
-#endif
-
 /*
  * Size of Driver command strings from upper layer
  */
@@ -167,7 +160,7 @@ static void hdd_get_tsm_stats_cb(tAniTrafStrmMetrics tsm_metrics,
 	hdd_adapter_t *adapter = NULL;
 
 	if (NULL == context) {
-		hdd_err("Bad param, context [%p]", context);
+		hdd_err("Bad param, context [%pK]", context);
 		return;
 	}
 
@@ -188,7 +181,7 @@ static void hdd_get_tsm_stats_cb(tAniTrafStrmMetrics tsm_metrics,
 		 * nothing we can do
 		 */
 		spin_unlock(&hdd_context_lock);
-		hdd_warn("Invalid context, adapter [%p] magic [%08x]",
+		hdd_warn("Invalid context, adapter [%pK] magic [%08x]",
 			  adapter, stats_context->magic);
 		return;
 	}
@@ -2442,7 +2435,7 @@ static void hdd_get_link_status_cb(uint8_t status, void *context)
 	hdd_adapter_t *adapter;
 
 	if (NULL == context) {
-		hdd_err("Bad context [%p]", context);
+		hdd_err("Bad context [%pK]", context);
 		return;
 	}
 
@@ -2458,7 +2451,7 @@ static void hdd_get_link_status_cb(uint8_t status, void *context)
 		 * nothing we can do
 		 */
 		spin_unlock(&hdd_context_lock);
-		hdd_warn("Invalid context, adapter [%p] magic [%08x]",
+		hdd_warn("Invalid context, adapter [%pK] magic [%08x]",
 			  adapter, pLinkContext->magic);
 		return;
 	}
@@ -3355,7 +3348,7 @@ static int drv_cmd_set_roam_mode(hdd_adapter_t *adapter,
 	value = value + SIZE_OF_SETROAMMODE + 1;
 
 	/* Convert the value from ascii to integer */
-	ret = kstrtou8(value, SIZE_OF_SETROAMMODE, &roamMode);
+	ret = kstrtou8(value, 10, &roamMode);
 	if (ret < 0) {
 		/*
 		 * If the input value is greater than max value of datatype,
@@ -4489,7 +4482,7 @@ static int drv_cmd_fast_reassoc(hdd_adapter_t *adapter,
 	uint8_t *value = command;
 	uint8_t channel = 0;
 	tSirMacAddr targetApBssid;
-	uint32_t roamId = 0;
+	uint32_t roamId = INVALID_ROAM_ID;
 	tCsrRoamModifyProfileFields modProfileFields;
 	tCsrHandoffRequest handoffInfo;
 	hdd_station_ctx_t *pHddStaCtx;
@@ -6719,43 +6712,6 @@ static int drv_cmd_dummy(hdd_adapter_t *adapter,
 	return 0;
 }
 
-#ifdef FEATURE_SUPPORT_LGE
-extern void wlan_hdd_set_scan_suppress(unsigned long on_off);
-/*LGE_CHNAGE_S, DRIVER scan_suppress command, 2017-06-12, moon-wifi@lge.com*/
-static int drv_cmd_set_scansuppress(hdd_adapter_t *adapter,
-			 hdd_context_t *hdd_ctx,
-             uint8_t *command,
-			 uint8_t command_len,
-			 hdd_priv_data_t *priv_data)
-{
-	int ret;
-	unsigned long on_off = 0;
-	size_t len = 0;
-	hdd_err("[LGE_COMMAND]:%s: \"%s\"", adapter->dev->name, command);
-
-	len = strlen(command);
-	if (len != 18) {
-		hdd_err("Incorrect Strvalue");
-		return -EINVAL;
-	}
-
-	ret = kstrtoul(command + 17, 10, &on_off);
-	if (ret != 0) {
-		hdd_err("Error in conversion from int to str: %d", ret);
-		return -EINVAL;
-	}
-
-	if (on_off < 0 || on_off > 1) {
-		hdd_err("Incorrect Testvalue!!(%ld)", on_off);
-		return -EINVAL;
-	}
-
-	wlan_hdd_set_scan_suppress(on_off);
-	return 0;
-}
-/*LGE_CHNAGE_E, DRIVER scan_suppress command, 2017-06-12, moon-wifi@lge.com*/
-#endif
-
 /*
  * handler for any unsupported wlan hdd driver command
  */
@@ -7058,11 +7014,6 @@ static const struct hdd_drv_cmd hdd_drv_cmds[] = {
 	{"SETANTENNAMODE",            drv_cmd_set_antenna_mode, true},
 	{"GETANTENNAMODE",            drv_cmd_get_antenna_mode, false},
 	{"STOP",                      drv_cmd_dummy, false},
-#ifdef FEATURE_SUPPORT_LGE
-/*LGE_CHNAGE_S, DRIVER scan_suppress command, 2017-06-12, moon-wifi@lge.com*/
-	{"SET_SCANSUPPRESS",          drv_cmd_set_scansuppress},
-/*LGE_CHNAGE_E, DRIVER scan_suppress command, 2017-06-12, moon-wifi@lge.com*/
-#endif
 };
 
 /**
