@@ -345,10 +345,42 @@ export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
 scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
+# Set optimization flags for gcc
+CC_FLAGS := -Os \
+		   -fdiagnostics-color=always \
+		   -fno-strict-aliasing -fno-common \
+		   -fomit-frame-pointer \
+		   -flive-range-shrinkage \
+		   -foptimize-sibling-calls \
+		   -fno-ivopts -fno-tree-ch \
+		   -fmodulo-sched -fmodulo-sched-allow-regmoves \
+		   -fipa-reference -fipa-icf -fdevirtualize -fdevirtualize-speculatively -flra-remat -fipa-ra \
+		   -funswitch-loops -fno-predictive-commoning -fgcse-after-reload -fsplit-paths -ftree-partial-pre \
+		   -fno-ipa-pure-const -fno-merge-constants  -fno-tree-pta \
+		   -fno-caller-saves -fno-optimize-strlen -fno-inline-functions-called-once \
+		   -fno-tree-slsr \
+		   -fipa-pta \
+		   -fno-schedule-insns -fno-sched-interblock -fno-sched-dep-count-heuristic \
+		   -fsched-spec-load \
+		   -fira-loop-pressure \
+		   -finline-small-functions -findirect-inlining -fpartial-inlining \
+		   -fno-tree-ccp \
+		   -fno-peephole2 -fno-expensive-optimizations \
+		   -fno-ipa-sra -fgcse -fgcse-las -frerun-cse-after-loop \
+		   -fno-tree-loop-if-convert \
+		   -fno-tree-reassoc \
+		   -fipa-cp -fipa-cp-alignment \
+		   -fipa-cp-clone \
+		   -ftree-loop-vectorize -ftree-slp-vectorize -fvect-cost-model \
+		   -march=armv8-a+crc+crypto -mtune=cortex-a73.cortex-a53 \
+		   -std=gnu89 $(call cc-option,-fno-PIE)
+
+LD_FLAGS := -Os --sort-common --strip-debug
+
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
-CC		= $(CCACHE) $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld $(LD_FLAGS)
+CC		= $(CCACHE) $(CROSS_COMPILE)gcc $(CC_FLAGS)
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -403,31 +435,6 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-maybe-uninitialized -Wno-misleading-indentation \
 		   -Wno-array-bounds -Wno-shift-overflow \
 		   -Wno-format-security \
-		   -fdiagnostics-color=always \
-		   -fomit-frame-pointer \
-		   -flive-range-shrinkage \
-		   -foptimize-sibling-calls \
-		   -fno-ivopts -fno-tree-ch \
-		   -fmodulo-sched -fmodulo-sched-allow-regmoves \
-		   -fipa-reference -fipa-icf -fdevirtualize -fdevirtualize-speculatively -flra-remat -fipa-ra \
-		   -funswitch-loops -fno-predictive-commoning -fgcse-after-reload -fsplit-paths -ftree-partial-pre \
-		   -fno-ipa-pure-const -fno-merge-constants  -fno-tree-pta \
-		   -fno-caller-saves -fno-optimize-strlen -fno-inline-functions-called-once \
-		   -fno-tree-slsr \
-		   -fipa-pta \
-		   -fno-schedule-insns -fno-sched-interblock -fno-sched-dep-count-heuristic \
-		   -fsched-spec-load \
-		   -fira-loop-pressure \
-		   -finline-small-functions -findirect-inlining -fpartial-inlining \
-		   -fno-tree-ccp \
-		   -fno-peephole2 -fno-expensive-optimizations \
-		   -fno-ipa-sra -fgcse -fgcse-las -frerun-cse-after-loop \
-		   -fno-tree-loop-if-convert \
-		   -fno-tree-reassoc \
-		   -fipa-cp -fipa-cp-alignment \
-		   -fipa-cp-clone \
-		   -ftree-loop-vectorize -ftree-slp-vectorize -fvect-cost-model \
-		   -march=armv8-a+crc+crypto -mtune=cortex-a73.cortex-a53 \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 #
 #	pessimistic:
