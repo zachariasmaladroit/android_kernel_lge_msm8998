@@ -1166,7 +1166,7 @@ CONFIG_DEFAULT_CFQ=y
 CONFIG_DEFAULT_IOSCHED="cfq"
 
 # performance & latency cutdown tweaking
-CONFIG_ZEN_INTERACTIVE=y
+# CONFIG_ZEN_INTERACTIVE is not set
 
 # eval optimizations
 # CONFIG_FRAME_POINTER is not set
