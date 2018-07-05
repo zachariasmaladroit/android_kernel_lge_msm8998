@@ -372,6 +372,7 @@ CC_FLAGS := -Os \
 		   -fipa-cp -fipa-cp-alignment \
 		   -fipa-cp-clone \
 		   -ftree-loop-vectorize -ftree-slp-vectorize -fvect-cost-model \
+		   -finline-functions \
 		   -march=armv8-a+crc+crypto -mtune=cortex-a73.cortex-a53 \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 
