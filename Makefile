@@ -405,8 +405,9 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fdiagnostics-color=always \
 		   -fomit-frame-pointer \
+		   -flive-range-shrinkage \
 		   -foptimize-sibling-calls \
-		   -fno-ivopts \
+		   -fno-ivopts -fno-tree-ch \
 		   -fmodulo-sched -fmodulo-sched-allow-regmoves \
 		   -fipa-reference -fipa-icf -fdevirtualize -fdevirtualize-speculatively -flra-remat -fipa-ra \
 		   -funswitch-loops -fno-predictive-commoning -fgcse-after-reload -fsplit-paths -ftree-partial-pre \
@@ -415,17 +416,23 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-tree-slsr \
 		   -fipa-pta \
 		   -fno-schedule-insns -fno-sched-interblock -fno-sched-dep-count-heuristic \
+		   -fsched-spec-load \
+		   -fira-loop-pressure \
+		   -finline-small-functions -findirect-inlining -fpartial-inlining \
 		   -fno-tree-ccp \
 		   -fno-peephole2 -fno-expensive-optimizations \
-		   -fno-ipa-sra -fgcse -fgcse-las \
-		   -fno-tree-loop-if-convert -fno-common \
+		   -fno-ipa-sra -fgcse -fgcse-las -frerun-cse-after-loop \
+		   -fno-tree-loop-if-convert \
 		   -fno-tree-reassoc \
+		   -fipa-cp -fipa-cp-alignment \
+		   -fipa-cp-clone \
+		   -ftree-loop-vectorize -ftree-slp-vectorize -fvect-cost-model \
 		   -march=armv8-a+crc+crypto -mtune=cortex-a73.cortex-a53 \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 #
 #	pessimistic:
 # 		   -fivopts \ # claimed to be pessimistic for ARM
-#		   -fipa-cp-clone
+#		   -fipa-cp-clone # eval [optimizes for perf rather than size]
 
 
 KBUILD_AFLAGS_KERNEL :=
