@@ -403,8 +403,6 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-maybe-uninitialized -Wno-misleading-indentation \
 		   -Wno-array-bounds -Wno-shift-overflow \
 		   -Wno-format-security \
-		   -fmodulo-sched -fmodulo-sched-allow-regmoves \
-		   -fivopts \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
 
 
