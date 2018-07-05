@@ -404,28 +404,11 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-array-bounds -Wno-shift-overflow \
 		   -Wno-format-security \
 		   -fdiagnostics-color=always \
-		   -fomit-frame-pointer \
-		   -foptimize-sibling-calls \
-		   -fno-ivopts \
 		   -fmodulo-sched -fmodulo-sched-allow-regmoves \
 		   -fipa-reference -fipa-icf -fdevirtualize -fdevirtualize-speculatively -flra-remat -fipa-ra \
-		   -funswitch-loops -fno-predictive-commoning -fgcse-after-reload -fsplit-paths -ftree-partial-pre \
-		   -fno-ipa-pure-const -fno-merge-constants  -fno-tree-pta \
-		   -fno-caller-saves -fno-optimize-strlen -fno-inline-functions-called-once \
-		   -fno-tree-slsr \
-		   -fipa-pta \
-		   -fno-schedule-insns -fno-sched-interblock -fno-sched-dep-count-heuristic \
-		   -fno-tree-ccp \
-		   -fno-peephole2 -fno-expensive-optimizations \
-		   -fno-ipa-sra -fgcse -fgcse-las \
-		   -fno-tree-loop-if-convert -fno-common \
-		   -fno-tree-reassoc \
+		   -fivopts \
 		   -march=armv8-a+crc+crypto -mtune=cortex-a73.cortex-a53 \
 		   -std=gnu89 $(call cc-option,-fno-PIE)
-#
-#	pessimistic:
-# 		   -fivopts \ # claimed to be pessimistic for ARM
-#		   -fipa-cp-clone
 
 
 KBUILD_AFLAGS_KERNEL :=
@@ -778,7 +761,7 @@ endif
 
 ifdef CONFIG_FUNCTION_TRACER
 ifndef CC_FLAGS_FTRACE
-#CC_FLAGS_FTRACE := -pg
+CC_FLAGS_FTRACE := -pg
 endif
 export CC_FLAGS_FTRACE
 ifdef CONFIG_HAVE_FENTRY
