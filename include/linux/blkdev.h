@@ -43,7 +43,6 @@ struct pr_ops;
 #else
 #define BLKDEV_MAX_RQ	128	/* Default maximum */
 #endif
-
 /*
  * Maximum number of blkcg policies allowed to be registered concurrently.
  * Defined here to simplify include dependency.
