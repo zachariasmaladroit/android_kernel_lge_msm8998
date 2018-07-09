@@ -1020,6 +1020,12 @@ CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
 #
 CONFIG_JUMP_LABEL=y
 
+# Ftrace
+CONFIG_FUNCTION_TRACER=y # default on
+#### CONFIG_FUNCTION_GRAPH_TRACER
+#### CONFIG_STACK_TRACER
+CONFIG_DYNAMIC_FTRACE=y # convert trace calls to NOP, 0% overhead 100% performance
+
 # CONFIG_HZ_100 is not set
 CONFIG_HZ_300=y
 
@@ -1030,3 +1036,127 @@ CONFIG_HZ_300=y
 # qcacld-3.0 debug stuff
 # CONFIG_FEATURE_TSO_DEBUG is not set
 # CONFIG_WLAN_NAPI_DEBUG is not set
+
+# keep workarounds NOT applicable to our hardware (modified later revision cortex A53, A73)
+# (early revision of hardware, only applied is applicable - so theoretically no harm)
+#
+
+# keep legacy emulation, compatibility w.r.t. ARMv8
+# disabling breaks WeChat (crash on startup) and others ...
+CONFIG_ARMV8_DEPRECATED=y
+CONFIG_SWP_EMULATION=y
+CONFIG_CP15_BARRIER_EMULATION=y
+CONFIG_SETEND_EMULATION=y
+
+# Wakelock Blocker
+# needs to be set up, doesn't block anything by default
+#
+CONFIG_BOEFFLA_WL_BLOCKER=y
+
+# add additional drivers that might be needed
+# CONFIG_RELAY is not set
+
+# swap, zram related settings
+# CONFIG_BALANCE_ANON_FILE_RECLAIM is not set
+
+# DVB, disable or needed for some weird streaming usage-case ?
+# CONFIG_DVB_MPQ is not set # =m
+# CONFIG_DVB_MPQ_DEMUX is not set # =m
+CONFIG_DVB_MPQ_NUM_DMX_DEVICES=4
+# CONFIG_DVB_MPQ_TSPP1 is not set # =y
+# CONFIG_DVB_MPQ_SW is not set
+# CONFIG_DVB_MPQ_MEDIA_BOX_DEMUX is not set
+# CONFIG_TSPP is not set # =m
+
+# WiGig (=m default)
+CONFIG_WIL6210=m
+CONFIG_WIL6210_ISR_COR=y
+CONFIG_WIL6210_TRACING=y
+CONFIG_WIL6210_WRITE_IOCTL=y
+CONFIG_WIL6210_PLATFORM_MSM=y
+CONFIG_MSM_11AD=m
+
+# RCU boosting, stall & jank reduction
+# CONFIG_TREE_RCU_TRACE is not set
+CONFIG_RCU_BOOST=y
+CONFIG_RCU_BOOST_DELAY=500
+CONFIG_RCU_KTHREAD_PRIO=6
+CONFIG_RCU_EXPEDITE_BOOT=y # speed up boot (10-15% speed is to be expected according to upstream)
+
+# Prior to v4.1, assists heap memory attacks; best to keep interface disabled.
+# CONFIG_INET_DIAG is not set
+
+# disable unnecessary/not applicable components, speed up boot & operation
+# CONFIG_SEEMP_CORE is not set
+# CONFIG_CPU_IDLE_GOV_LADDER is not set
+# CONFIG_USB_NET_DRIVERS is not set
+# CONFIG_VGA_ARB is not set
+# CONFIG_SND_SUPPORT_OLD_API is not set
+# CONFIG_SND_VERBOSE_PROCFS is not set
+# CONFIG_SND_DRIVERS is not set
+# CONFIG_MSM_BOOT_STATS is not set
+# CONFIG_SCHED_AUTOGROUP is not set
+# CONFIG_QCOM_RTB is not set
+# CONFIG_QCOM_RTB_SEPARATE_CPUS is not set
+# CONFIG_MMC_PERF_PROFILING is not set
+# CONFIG_IOSCHED_TEST is not set
+# CONFIG_MSM_GLADIATOR_ERP_V2 is not set
+# CONFIG_PANIC_ON_GLADIATOR_ERROR_V2 is not set
+# CONFIG_MSM_GLADIATOR_ERROR_V2_MAIN_LOGGER_ONLY is not set
+# CONFIG_MSM_GLADIATOR_HANG_DETECT is not set
+# CONFIG_MSM_CORE_HANG_DETECT is not set
+# CONFIG_EDAC_CORTEX_ARM64 is not set
+# CONFIG_EDAC_CORTEX_ARM64_PANIC_ON_CE is not set
+# CONFIG_EDAC_CORTEX_ARM64_DBE_IRQ_ONLY is not set
+# CONFIG_EDAC_CORTEX_ARM64_PANIC_ON_UE is not set
+# CONFIG_MPC_UT_FRAMEWORK is not set # qcacld-3.0 $(HDD_SRC_DIR)/wlan_hdd_conc_ut.o
+# CONFIG_QCOM_DCC is not set # QCOM Data Capture and Compare enigne support
+# CONFIG_MSM_BOOT_STATS is not set
+# CONFIG_QCOM_CPUSS_DUMP is not set
+# CONFIG_BLK_DEV_MD is not set
+# CONFIG_MD_LINEAR is not set
+# CONFIG_V4L_PLATFORM_DRIVERS # eval
+
+# disable debug, logs stuff
+CONFIG_LGE_PM_DEBUG=y
+# CONFIG_MSM_SDE_ROTATOR_EVTLOG_DEBUG is not set
+# CONFIG_FB_MSM_MDSS_XLOG_DEBUG is not set
+# CONFIG_IOMMU_DEBUG is not set
+# CONFIG_IOMMU_TESTS is not set
+# CONFIG_ICNSS_DEBUG is not set
+# CONFIG_FEATURE_TSO_DEBUG is not set
+# CONFIG_ALLOW_DEV_COREDUMP is not set
+# CONFIG_WLAN_FEATURE_MEMDUMP is not set
+# CONFIG_MSM_RPM_RBCPR_STATS_V2_LOG is not set
+# CONFIG_MSM_RPM_LOG is not set
+# CONFIG_MSM_RPM_STATS_LOG is not set
+# CONFIG_MSM_TZ_LOG is not set
+# CONFIG_TRACER_PKT is not set
+# CONFIG_QCOM_REMOTEQDSS is not set
+# CONFIG_QCOM_COMMON_LOG is not set
+
+# disable for debug, security, attack surface
+# CONFIG_MSM_RDBG is not set
+# CONFIG_MAGIC_SYSRQ is not set
+
+# disable debug/strip/shrink kernel
+CONFIG_KALLSYMS_ALL=y # needed on Stock for successful booting
+CONFIG_DEBUG_INFO_REDUCED=y
+
+# 1000 Hz ticks
+CONFIG_HZ_100=y
+# CONFIG_HZ_250 is not set
+# CONFIG_HZ_300 is not set
+# CONFIG_HZ_1000 is not set
+CONFIG_HZ=100
+
+# i/o schedulers
+CONFIG_IOSCHED_NOOP=y
+# CONFIG_IOSCHED_TEST is not set
+CONFIG_IOSCHED_DEADLINE=y
+CONFIG_IOSCHED_CFQ=y
+# CONFIG_IOSCHED_BFQ is not set
+# CONFIG_DEFAULT_DEADLINE is not set
+CONFIG_DEFAULT_CFQ=y
+# CONFIG_DEFAULT_NOOP is not set
+CONFIG_DEFAULT_IOSCHED="cfq"
