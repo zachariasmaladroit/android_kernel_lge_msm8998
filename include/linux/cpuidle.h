@@ -34,7 +34,7 @@ struct cpuidle_state_usage {
 	unsigned long long	usage;
 	unsigned long long	time; /* in US */
 #ifdef CONFIG_SUSPEND
-	unsigned long long	s2idle_usage;
+	unsigned long long	freeze;
 	unsigned long long	s2idle_time; /* in US */
 #endif
 };
