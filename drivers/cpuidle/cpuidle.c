@@ -152,8 +152,8 @@ static void enter_freeze_proper(struct cpuidle_driver *drv,
 
 	time_end = ns_to_ktime(local_clock());
 
-	dev->states_usage[index].freeze_time += ktime_us_delta(time_end, time_start);
-	dev->states_usage[index].freeze_usage++;
+	dev->states_usage[index].s2idle_time += ktime_us_delta(time_end, time_start);
+	dev->states_usage[index].s2idle_usage++;
 }
 
 /**
