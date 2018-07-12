@@ -98,7 +98,7 @@ static int __lz4hc_decompress_crypto(const u8 *src, unsigned int slen,
 	int out_len = LZ4_decompress_safe(src, dst, slen, *dlen);
 
 	if (out_len < 0)
-		return -EINVAL;
+		return out_len;
 
 	*dlen = out_len;
 	return 0;
