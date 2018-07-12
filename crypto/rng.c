@@ -47,14 +47,12 @@ int crypto_rng_reset(struct crypto_rng *tfm, const u8 *seed, unsigned int slen)
 		if (!buf)
 			return -ENOMEM;
 
-		err = get_random_bytes_wait(buf, slen);
-		if (err)
-			goto out;
+		get_random_bytes(buf, slen);
 		seed = buf;
 	}
 
 	err = crypto_rng_alg(tfm)->seed(tfm, seed, slen);
-out:
+
 	kzfree(buf);
 	return err;
 }
