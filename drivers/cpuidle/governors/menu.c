@@ -21,7 +21,6 @@
 #include <linux/math64.h>
 #include <linux/module.h>
 #include <linux/cpu.h>
-#include <linux/smp.h>
 
 /*
  * Please note when changing the tuning values:
@@ -130,10 +129,6 @@ struct menu_device {
 	unsigned int	correction_factor[BUCKETS];
 	unsigned int	intervals[INTERVALS];
 	int		interval_ptr;
-
-	struct hrtimer	fallback_timer;
-	int             have_timer;
-	unsigned int	disregard_past;
 };
 
 
@@ -198,85 +193,6 @@ static inline int performance_multiplier(unsigned long nr_iowaiters, unsigned lo
 }
 
 static DEFINE_PER_CPU(struct menu_device, menu_devices);
-
-static unsigned int fallback_timer_disregard_past = 1;
-static unsigned int diff_threshold_bits = 8;
-static unsigned int fallback_timer_enabled;
-static unsigned int fallback_timer_interval_us = 10000;
-
-#define MENU_ATTR_RW(name, var, range_min, range_max, wfun) \
-	static ssize_t show_##name(struct device *dev, \
-				   struct device_attribute *attr, char *buf) \
-	{ \
-		return snprintf(buf, 12, "%i\n", var); \
-	} \
-	static ssize_t store_##name(struct device *dev, \
-				    struct device_attribute *attr, \
-				    const char *buf, size_t count) \
-	{ \
-		unsigned int tmp; \
-		int ret = kstrtouint(buf, 10, &tmp); \
-		if (ret != 1) \
-			return -EINVAL; \
-		if (tmp > range_max || tmp < range_min) { \
-			pr_warn("value outside of valid range [%u, %u]\n", \
-				range_min, range_max); \
-			return -EINVAL; \
-		} \
-		var = tmp; \
-		wfun \
-		return count; \
-	} \
-	static DEVICE_ATTR(fallback_timer_##name, 0644, \
-			   show_##name, store_##name)
-
-MENU_ATTR_RW(threshold_bits, diff_threshold_bits, 0, 31, {});
-
-MENU_ATTR_RW(enable, fallback_timer_enabled, 0, 1, {
-	int i;
-
-	for_each_possible_cpu(i) {
-		struct menu_device *data = per_cpu_ptr(&menu_devices, i);
-
-		if (!fallback_timer_enabled) {
-			data->have_timer = 0;
-			hrtimer_cancel(&(data->fallback_timer));
-		}
-	} });
-
-MENU_ATTR_RW(interval_us, fallback_timer_interval_us, 1, 1000000, {});
-
-MENU_ATTR_RW(disregard_past, fallback_timer_disregard_past, 0, 1, {
-	int i;
-
-	for_each_possible_cpu(i) {
-		struct menu_device *data = per_cpu_ptr(&menu_devices, i);
-
-		data->disregard_past = 0;
-	} });
-
-static struct attribute *menu_attrs[] = {
-	&dev_attr_fallback_timer_threshold_bits.attr,
-	&dev_attr_fallback_timer_enable.attr,
-	&dev_attr_fallback_timer_interval_us.attr,
-	&dev_attr_fallback_timer_disregard_past.attr,
-	NULL
-};
-
-static struct attribute_group menu_attr_group = {
-	.attrs = menu_attrs,
-	.name = "cpuidle_menu",
-};
-
-int menu_add_interface(struct device *dev)
-{
-	return sysfs_create_group(&dev->kobj, &menu_attr_group);
-}
-
-void menu_remove_interface(struct device *dev)
-{
-	sysfs_remove_group(&dev->kobj, &menu_attr_group);
-}
 
 static void menu_update(struct cpuidle_driver *drv, struct cpuidle_device *dev);
 
@@ -363,14 +279,6 @@ again:
 	goto again;
 }
 
-static enum hrtimer_restart fallback_timer_fun(struct hrtimer *tmr)
-{
-	struct menu_device *mdata = this_cpu_ptr(&menu_devices);
-
-	mdata->disregard_past = 1;
-	return HRTIMER_NORESTART;
-}
-
 /**
  * menu_select - selects the next idle state to enter
  * @drv: cpuidle driver containing state data
@@ -388,11 +296,6 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev)
 	unsigned int expected_interval;
 	unsigned long nr_iowaiters, cpu_load;
 	int resume_latency = dev_pm_qos_raw_read_value(device);
-
-	if (fallback_timer_enabled && data->have_timer) {
-		data->have_timer = 0;
-		hrtimer_cancel(&(data->fallback_timer));
-	}
 
 	if (data->needs_update) {
 		menu_update(drv, dev);
@@ -423,32 +326,7 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev)
 					 RESOLUTION * DECAY);
 
 	expected_interval = get_typical_interval(data);
-
-	if (fallback_timer_enabled && fallback_timer_disregard_past
-	    && data->disregard_past)  {
-		expected_interval = data->next_timer_us;
-		// Only disregard the past once! Then try again
-		data->disregard_past = 0;
-	} else {
-		if (fallback_timer_enabled
-		    && expected_interval < (data->next_timer_us >> diff_threshold_bits)
-		    && data->next_timer_us > fallback_timer_interval_us * 2) {
-			/*
-			 * Program the fallback timer if the gap between the
-			 * expected interval by heuristic and the next regular
-			 * timer are too far apart.
-			 * However, only do this when we didn't just wakup from
-			 * a timer and are told to disregard the heuristic
-			 */
-			ktime_t interval =
-				ktime_set(0, fallback_timer_interval_us * 1000);
-
-			hrtimer_start(&(data->fallback_timer), interval,
-				      HRTIMER_MODE_REL_PINNED);
-			data->have_timer = 1;
-		}
-		expected_interval = min(expected_interval, data->next_timer_us);
-	}
+	expected_interval = min(expected_interval, data->next_timer_us);
 
 	if (CPUIDLE_DRIVER_STATE_START > 0) {
 		struct cpuidle_state *s = &drv->states[CPUIDLE_DRIVER_STATE_START];
@@ -523,11 +401,6 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev)
 static void menu_reflect(struct cpuidle_device *dev, int index)
 {
 	struct menu_device *data = this_cpu_ptr(&menu_devices);
-
-	if (fallback_timer_enabled && data->have_timer) {
-		data->have_timer = 0;
-		hrtimer_cancel(&data->fallback_timer);
-	}
 
 	data->last_state_idx = index;
 	data->needs_update = 1;
@@ -617,10 +490,6 @@ static int menu_enable_device(struct cpuidle_driver *drv,
 
 	memset(data, 0, sizeof(struct menu_device));
 
-	hrtimer_init(&(data->fallback_timer),
-		     CLOCK_REALTIME, HRTIMER_MODE_REL_PINNED);
-	data->fallback_timer.function = fallback_timer_fun;
-
 	/*
 	 * if the correction factor is 0 (eg first time init or cpu hotplug
 	 * etc), we actually want to start out with a unity factor.
@@ -645,10 +514,6 @@ static struct cpuidle_governor menu_governor = {
  */
 static int __init init_menu(void)
 {
-	int ret = menu_add_interface(cpu_subsys.dev_root);
-
-	if (ret)
-		return ret;
 	return cpuidle_register_governor(&menu_governor);
 }
 
