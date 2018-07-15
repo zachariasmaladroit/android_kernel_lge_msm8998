@@ -1071,23 +1071,9 @@ CONFIG_DEBUG_FS=y
 # CONFIG_WLAN_NAPI_DEBUG is not set
 
 # disable workarounds NOT applicable to our hardware (modified later revision cortex A53, A73)
-# CONFIG_ARM64_ERRATUM_826319 is not set
-# CONFIG_ARM64_ERRATUM_827319 is not set
-# CONFIG_ARM64_ERRATUM_824069 is not set
-# CONFIG_ARM64_ERRATUM_819472 is not set
-# CONFIG_ARM64_ERRATUM_832075 is not set
-# CONFIG_ARM64_ERRATUM_845719 is not set
-# CONFIG_ARM64_ERRATUM_843419 is not set
-# CONFIG_CAVIUM_ERRATUM_22375 is not set
-# CONFIG_CAVIUM_ERRATUM_23154 is not set
-# CONFIG_CAVIUM_ERRATUM_27456 is not set
 
 # keep legacy emulation, compatibility w.r.t. ARMv8
 # disabling breaks WeChat (crash on startup) and others ...
-# CONFIG_ARMV8_DEPRECATED is not set
-# CONFIG_SWP_EMULATION is not set
-# CONFIG_CP15_BARRIER_EMULATION is not set
-# CONFIG_SETEND_EMULATION is not set
 
 # Wakelock Blocker
 # needs to be set up, doesn't block anything by default
