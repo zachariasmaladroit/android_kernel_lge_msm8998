@@ -1206,6 +1206,7 @@ CONFIG_DEFAULT_IOSCHED="noop"
 
 # performance & latency cutdown tweaking
 # CONFIG_ZEN_INTERACTIVE is not set
+CONFIG_SCSI_MQ_DEFAULT=y
 
 # monolithic kernel, external modules
 # CONFIG_MODULES is not set
