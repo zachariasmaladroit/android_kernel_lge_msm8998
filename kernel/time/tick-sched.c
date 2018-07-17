@@ -42,6 +42,17 @@ spinlock_t rq_lock;
  */
 static DEFINE_PER_CPU(struct tick_sched, tick_cpu_sched);
 
+struct tick_sched *tick_get_tick_sched(int cpu)
+{
+	return &per_cpu(tick_cpu_sched, cpu);
+}
+
+#if defined(CONFIG_NO_HZ_COMMON) || defined(CONFIG_HIGH_RES_TIMERS)
+/*
+ * The time, when the last jiffy update happened. Protected by jiffies_lock.
+ */
+static ktime_t last_jiffies_update;
+
 u64 jiffy_to_ktime_ns(u64 *now, u64 *jiffy_ktime_ns)
 {
 	u64 cur_jiffies;
@@ -56,17 +67,6 @@ u64 jiffy_to_ktime_ns(u64 *now, u64 *jiffy_ktime_ns)
 
 	return cur_jiffies;
 }
-
-struct tick_sched *tick_get_tick_sched(int cpu)
-{
-	return &per_cpu(tick_cpu_sched, cpu);
-}
-
-#if defined(CONFIG_NO_HZ_COMMON) || defined(CONFIG_HIGH_RES_TIMERS)
-/*
- * The time, when the last jiffy update happened. Protected by jiffies_lock.
- */
-static ktime_t last_jiffies_update;
 
 /*
  * Must be called with interrupts disabled !
