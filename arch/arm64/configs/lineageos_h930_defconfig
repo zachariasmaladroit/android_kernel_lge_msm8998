@@ -5757,7 +5757,7 @@ CONFIG_QCOM_COMMON_LOG=y # printk, dmesg, pstore ?
 # CONFIG_MAGIC_SYSRQ is not set
 
 # disable debug/strip/shrink kernel
-CONFIG_KALLSYMS_ALL=y # needed on Stock for successful booting
+# CONFIG_KALLSYMS_ALL is not set # needed on Stock for successful booting
 CONFIG_DEBUG_INFO_REDUCED=y
 
 # 1000/300/100 Hz ticks
