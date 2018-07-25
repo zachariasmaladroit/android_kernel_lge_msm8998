@@ -5799,7 +5799,7 @@ CONFIG_DEFAULT_IOSCHED="noop"
 # performance & latency cutdown tweaking
 # CONFIG_ZEN_INTERACTIVE is not set
 # CONFIG_SCSI_MQ_DEFAULT is not set # broken on 4.4 Android ?
-# CONFIG_MANDATORY_FILE_LOCKING is not set
+CONFIG_MANDATORY_FILE_LOCKING=y
 
 # swap, hswap, zram, etc.
 CONFIG_KSWAPD_CPU_AFFINITY_MASK="f"
