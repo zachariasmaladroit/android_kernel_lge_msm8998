@@ -4054,7 +4054,7 @@ static int ftm4_irq_handler(struct device *dev)
 
 	TOUCH_TRACE();
 
-	pm_qos_update_request(&d->pm_qos_req, 10);
+	pm_qos_update_request(&d->pm_qos_req, 100);
 
 	if (atomic_read(&d->power) == POWER_OFF) {
 		TOUCH_I("%s: d.power is POWER_OFF\n", __func__);
