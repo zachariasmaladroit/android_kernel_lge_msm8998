@@ -3318,7 +3318,7 @@ static int ftm4_fb_notifier_callback(struct notifier_block *self,
 
 	TOUCH_TRACE();
 
-	if (ev && ev->data && event == FB_EVENT_BLANK) {
+	if (ev && ev->data && event == FB_EARLY_EVENT_BLANK) {
 		int *blank = (int *)ev->data;
 
 		d->fb_blank.prev = d->fb_blank.curr;
