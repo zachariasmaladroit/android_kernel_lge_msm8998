@@ -5703,7 +5703,7 @@ CONFIG_WIL6210_PLATFORM_MSM=y
 # CONFIG_SND_VERBOSE_PROCFS is not set
 # CONFIG_SND_DRIVERS is not set
 # CONFIG_MSM_BOOT_STATS is not set
-# CONFIG_SCHED_AUTOGROUP is not set # so it's obviously not necessarily to work on stock ROMs
+CONFIG_SCHED_AUTOGROUP=y # so it's obviously not necessarily to work on stock ROMs
 # CONFIG_QCOM_RTB is not set
 # CONFIG_QCOM_RTB_SEPARATE_CPUS is not set
 # CONFIG_MMC_PERF_PROFILING is not set
