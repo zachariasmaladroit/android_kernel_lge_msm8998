@@ -5068,7 +5068,7 @@ CONFIG_WQ_WATCHDOG=y
 # CONFIG_PANIC_ON_OOPS is not set
 CONFIG_PANIC_ON_OOPS_VALUE=0
 CONFIG_PANIC_TIMEOUT=5
-CONFIG_SCHED_DEBUG=y
+
 # CONFIG_SCHED_INFO is not set
 # CONFIG_PANIC_ON_SCHED_BUG is not set
 # CONFIG_PANIC_ON_RT_THROTTLING is not set
@@ -5755,13 +5755,22 @@ CONFIG_LGE_PM_DEBUG=y
 # CONFIG_WLAN_FEATURE_MEMDUMP is not set
 # CONFIG_MSM_RPM_RBCPR_STATS_V2_LOG is not set
 # CONFIG_MSM_RPM_LOG is not set
-# CONFIG_MSM_RPM_STATS_LOG is not set
+
 # CONFIG_MSM_TZ_LOG is not set
 # CONFIG_TRACER_PKT is not set
 # CONFIG_QCOM_REMOTEQDSS is not set
 # CONFIG_QCOM_COMMON_LOG is not set
 # CONFIG_QCOM_MEMORY_DUMP_V2 is not set
 # CONFIG_USB_DWC3_DEBUG_FS is not set
+
+# debug configs, interfaces needed for proper functionality
+CONFIG_SCHED_DEBUG=y
+CONFIG_DEBUG_FS=y # needed for wakeup sources for context
+CONFIG_MSM_RPM_STATS_LOG=y
+CONFIG_DEBUG_SHIRQ=y # assumedly recommended
+# CONFIG_RCU_EQS_DEBUG is not set # debug NO_HZ functionality (temp)
+
+
 
 # disable for debug, security, attack surface
 # CONFIG_MSM_RDBG is not set
