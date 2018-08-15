@@ -5761,14 +5761,9 @@ CONFIG_LGE_PM_DEBUG=y
 # CONFIG_MAGIC_SYSRQ is not set
 
 # disable debug/strip/shrink kernel
+CONFIG_KALLSYMS_ALL=y # needed on Stock for successful booting
 CONFIG_DEBUG_INFO_REDUCED=y
 CONFIG_STRIP_ASM_SYMS=y
-
-# symbols, debugging, tracing
-CONFIG_KALLSYMS=y
-# CONFIG_KALLSYMS_ALL is not set
-# CONFIG_KALLSYMS_ABSOLUTE_PERCPU is not set
-CONFIG_KALLSYMS_BASE_RELATIVE=y
 
 # tracing stuff, full disable
 # CONFIG_TRACING is not set
