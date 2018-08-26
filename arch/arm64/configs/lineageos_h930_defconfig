@@ -5772,7 +5772,7 @@ CONFIG_MAGIC_SYSRQ=y
 # disable debug/strip/shrink kernel
 CONFIG_KALLSYMS_ALL=y # needed on Stock for successful booting
 CONFIG_DEBUG_INFO_REDUCED=y
-CONFIG_STRIP_ASM_SYMS=y
+# CONFIG_STRIP_ASM_SYMS is not set
 
 # 1000/300/100 Hz ticks
 # CONFIG_HZ_100 is not set
