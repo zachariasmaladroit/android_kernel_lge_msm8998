@@ -5764,7 +5764,7 @@ CONFIG_QCOM_MEMORY_DUMP_V2=y
 
 # disable for debug, security, attack surface
 # CONFIG_MSM_RDBG is not set
-# CONFIG_MAGIC_SYSRQ is not set
+CONFIG_MAGIC_SYSRQ=y
 
 # disable debug/strip/shrink kernel
 CONFIG_KALLSYMS_ALL=y # needed on Stock for successful booting
