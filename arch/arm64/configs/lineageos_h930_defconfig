@@ -5761,6 +5761,7 @@ CONFIG_QCOM_REMOTEQDSS=y
 CONFIG_QCOM_COMMON_LOG=y
 CONFIG_QCOM_MEMORY_DUMP_V2=y
 # CONFIG_USB_DWC3_DEBUG_FS is not set
+CONFIG_DETECT_HUNG_TASK=y
 
 # disable for debug, security, attack surface
 # CONFIG_MSM_RDBG is not set
