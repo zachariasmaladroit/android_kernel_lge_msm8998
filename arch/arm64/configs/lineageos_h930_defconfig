@@ -503,7 +503,6 @@ CONFIG_BINFMT_SCRIPT=y
 # CONFIG_HAVE_AOUT is not set
 # CONFIG_BINFMT_MISC is not set
 CONFIG_COREDUMP=y
-CONFIG_COMPAT=y
 
 #
 # Power management options
@@ -5609,6 +5608,10 @@ CONFIG_WLAN_FEATURE_FILS=y
 
 # keep legacy emulation, compatibility w.r.t. ARMv8
 # disabling breaks WeChat (crash on startup) and others ...
+
+# Kernel support for 32-bit EL0 (COMPAT/COMPAT_VDSO)
+CONFIG_COMPAT=y
+CONFIG_COMPAT_VDSO=y
 
 # Wakelock Blocker
 # needs to be set up, doesn't block anything by default
