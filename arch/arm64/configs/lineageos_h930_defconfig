@@ -5944,3 +5944,6 @@ CONFIG_ANDROID_SIMPLE_LMK=y
 # driver, which is used with adb and mtp. It is now required to be enabled
 # for better performance with those services.
 CONFIG_AIO=y
+
+# security hardening
+# CONFIG_SECURITY_LOADPIN is not set
