@@ -15,6 +15,7 @@
 #include <linux/export.h>
 #include <linux/sched/rt.h>
 #include <linux/osq_lock.h>
+#include <linux/atomic.h>
 
 #include "rwsem.h"
 
