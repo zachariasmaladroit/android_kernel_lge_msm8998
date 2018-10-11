@@ -6033,16 +6033,16 @@ CONFIG_NET_UDP_TUNNEL=y
 CONFIG_MACH_LGE=y
 CONFIG_MACH_MSM8998_JOAN=y
 # CONFIG_MACH_MSM8998_JOAN_GLOBAL_COM is not set
-# CONFIG_MACH_MSM8998_JOAN_SPR_US is not set
-CONFIG_MACH_MSM8998_JOAN_TMO_US=y # config similar to sprint
+CONFIG_MACH_MSM8998_JOAN_SPR_US=y
+# CONFIG_MACH_MSM8998_JOAN_TMO_US is not set # config similar to sprint
 # CONFIG_MACH_MSM8998_JOAN_VZW is not set
 
 # CONFIG_TOUCHSCREEN_FTS=y # for tmo_us-perf (config doesn't exist !)
 
 # "feature for usb diag access lock" - perhaps shouldn't even used in production ...
 CONFIG_LGE_USB_DIAG_LOCK=y
-# CONFIG_LGE_USB_DIAG_LOCK_SPR is not set # SET on spr_us
-CONFIG_LGE_USB_DIAG_LOCK_TRF=y # assuming TMO
+CONFIG_LGE_USB_DIAG_LOCK_SPR=y # SET on spr_us
+# CONFIG_LGE_USB_DIAG_LOCK_TRF is not set # assuming TMO
 # CONFIG_LGE_USB_DIAG_LOCK_VZW is not set # NOT set on vzw ?!
 
 # CONFIG_LGE_PM_BATT_MANAGER is not set # GLOBAL # NOT spr, vzw, tmo
@@ -6077,7 +6077,7 @@ CONFIG_LGECRYPTO_FIPS_ADDED_SIGNATURE_SIZE=710
 CONFIG_LGE_PKM=y
 
 # tmo/vzw ONLY
-CONFIG_TRUSTONIC_TEE=y
+# CONFIG_TRUSTONIC_TEE is not set
 # CONFIG_CMA_PINPAGE_MIGRATION is not set # "Turns on cma page migration for pinned page" (stability ?)
 # CONFIG_LGE_QSDL_SUPPORT is not set # NOT for tmo_us ? "Support for Quality Statistics Data Logging"
 
