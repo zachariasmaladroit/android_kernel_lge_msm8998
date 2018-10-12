@@ -6794,7 +6794,7 @@ static int sched_group_energy(struct energy_env *eenv)
 				group_util = group_norm_util(eenv, sg);
 
 				sg_busy_energy = (group_util * sg->sge->cap_states[cap_idx].power);
-				sg_idle_energy = ((scale_load_down(NICE_0_LOAD)-group_util)
+				sg_idle_energy = ((SCHED_LOAD_SCALE-group_util)
 								* sg->sge->idle_states[idle_idx].power);
 
 				total_energy += sg_busy_energy + sg_idle_energy;
@@ -9371,7 +9371,7 @@ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
 static inline bool
 group_smaller_cpu_capacity(struct sched_group *sg, struct sched_group *ref)
 {
-	return sg->sgc->max_capacity + capacity_margin - scale_load_down(NICE_0_LOAD) <
+	return sg->sgc->max_capacity + capacity_margin - SCHED_LOAD_SCALE <
 							ref->sgc->max_capacity;
 }
 
@@ -9894,7 +9894,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
 	if (busiest->group_type == group_overloaded &&
 	    local->group_type   == group_overloaded) {
 		load_above_capacity = busiest->sum_nr_running *
-				      scale_load_down(NICE_0_LOAD);
+					SCHED_LOAD_SCALE;
 		if (load_above_capacity > busiest->group_capacity)
 			load_above_capacity -= busiest->group_capacity;
 		else
