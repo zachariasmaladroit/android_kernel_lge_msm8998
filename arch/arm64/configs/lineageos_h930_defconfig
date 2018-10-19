@@ -5987,6 +5987,11 @@ CONFIG_ANDROID_SIMPLE_LMK_MINFREE=64
 CONFIG_ANDROID_SIMPLE_LMK_KSWAPD_TIMEOUT=100
 CONFIG_ANDROID_SIMPLE_LMK_OOM_TIMEOUT=50
 
+# later added performance enhancements and tweaks behind a config entry
+# RSEQ (selected via Makefile by default)
+CONFIG_HAVE_RSEQ=y
+CONFIG_RSEQ=y
+
 # AIO
 # CONFIG_AIO has legitimate use for the functionfs
 # driver, which is used with adb and mtp. It is now required to be enabled
