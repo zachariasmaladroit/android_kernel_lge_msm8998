@@ -5029,7 +5029,7 @@ CONFIG_DEBUG_FS=y
 # CONFIG_DEBUG_SECTION_MISMATCH is not set
 CONFIG_SECTION_MISMATCH_WARN_ONLY=y
 CONFIG_ARCH_WANT_FRAME_POINTERS=y
-CONFIG_FRAME_POINTER=y
+
 # CONFIG_DEBUG_FORCE_WEAK_PER_CPU is not set
 CONFIG_MAGIC_SYSRQ=y
 CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0x1
@@ -5772,6 +5772,9 @@ CONFIG_TRACER_PKT=y
 # CONFIG_QCOM_MEMORY_DUMP_V2 is not set
 # CONFIG_USB_DWC3_DEBUG_FS is not set
 # CONFIG_MSM_SMEM_LOGGING is not set
+
+# basic debuggability, raw performance
+# CONFIG_FRAME_POINTER is not set # last time we tried this didn't work out so well ...
 
 # disable for debug, security, attack surface
 # CONFIG_MSM_RDBG is not set # remote debugger driver (=m by default)
