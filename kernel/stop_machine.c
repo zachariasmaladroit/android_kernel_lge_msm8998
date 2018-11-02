@@ -323,13 +323,12 @@ bool stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
 /* static data for stop_cpus */
 static DEFINE_MUTEX(stop_cpus_mutex);
 
-static bool queue_stop_cpus_work(const struct cpumask *cpumask,
+static void queue_stop_cpus_work(const struct cpumask *cpumask,
 				 cpu_stop_fn_t fn, void *arg,
 				 struct cpu_stop_done *done)
 {
 	struct cpu_stop_work *work;
 	unsigned int cpu;
-	bool queued = false;
 
 	/*
 	 * Disable preemption while queueing to avoid getting
@@ -342,12 +341,9 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
 		work->fn = fn;
 		work->arg = arg;
 		work->done = done;
-		if (cpu_stop_queue_work(cpu, work))
-			queued = true;
+		cpu_stop_queue_work(cpu, work);
 	}
 	lg_global_unlock(&stop_cpus_lock);
-
-	return queued;
 }
 
 static int __stop_cpus(const struct cpumask *cpumask,
@@ -356,11 +352,9 @@ static int __stop_cpus(const struct cpumask *cpumask,
 	struct cpu_stop_done done;
 
 	cpu_stop_init_done(&done, cpumask_weight(cpumask));
-	if (!queue_stop_cpus_work(cpumask, fn, arg, &done))
-		return -ENOENT;
+	queue_stop_cpus_work(cpumask, fn, arg, &done);
 	wait_for_completion(&done.completion);
-	WARN_ON(!done.executed);
-	return done.ret;
+	return done.executed ? done.ret : -ENOENT;
 }
 
 /**
