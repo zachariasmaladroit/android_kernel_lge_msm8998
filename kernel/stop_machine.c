@@ -488,7 +488,7 @@ repeat:
 		preempt_disable();
 
 		ret = fn(arg);
-		if (ret && done)
+		if (ret)
 			done->ret = ret;
 
 		/* restore preemption and check it's still balanced */
