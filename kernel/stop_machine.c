@@ -81,21 +81,17 @@ static void __cpu_stop_queue_work(struct cpu_stopper *stopper,
 }
 
 /* queue @work to @stopper.  if offline, @work is completed immediately */
-static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
+static void cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
 {
 	struct cpu_stopper *stopper = &per_cpu(cpu_stopper, cpu);
 	unsigned long flags;
-	bool enabled;
 
 	spin_lock_irqsave(&stopper->lock, flags);
-	enabled = stopper->enabled;
-	if (enabled)
+	if (stopper->enabled)
 		__cpu_stop_queue_work(stopper, work);
 	else
 		cpu_stop_signal_done(work->done, false);
 	spin_unlock_irqrestore(&stopper->lock, flags);
-
-	return enabled;
 }
 
 /**
@@ -308,16 +304,12 @@ int stop_two_cpus(unsigned int cpu1, unsigned int cpu2, cpu_stop_fn_t fn, void *
  *
  * CONTEXT:
  * Don't care.
- *
- * RETURNS:
- * true if cpu_stop_work was queued successfully and @fn will be called,
- * false otherwise.
  */
-bool stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
+void stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
 			struct cpu_stop_work *work_buf)
 {
 	*work_buf = (struct cpu_stop_work){ .fn = fn, .arg = arg, };
-	return cpu_stop_queue_work(cpu, work_buf);
+	cpu_stop_queue_work(cpu, work_buf);
 }
 
 /* static data for stop_cpus */
