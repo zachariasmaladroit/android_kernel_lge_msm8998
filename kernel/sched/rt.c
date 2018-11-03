@@ -12,7 +12,7 @@
 #include <trace/events/sched.h>
 #include "walt.h"
 
-#include "walt.h" // used ?
+//#include "walt.h" // used ?
 #include "tune.h"
 
 int sched_rr_timeslice = RR_TIMESLICE;
