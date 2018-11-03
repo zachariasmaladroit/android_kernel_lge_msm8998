@@ -6112,3 +6112,5 @@ CONFIG_SERIAL_MSM_CONSOLE=y
 CONFIG_BT_BDA=y
 CONFIG_SPI_SLAVE=y # SPI slave protocol handlers
 
+# USB analog headset driver (by Xiaomi)
+# CONFIG_SND_SOC_USB_HEADSET is not set
