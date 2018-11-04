@@ -1610,7 +1610,7 @@ cpu_has_rt_task(int cpu)
 #ifdef CONFIG_SMP
 static int find_lowest_rq(struct task_struct *task, int sync);
 
-#ifdef CONFIG_SCHED_HMP
+/*#ifdef CONFIG_SCHED_HMP
 static int
 select_task_rq_rt_hmp(struct task_struct *p, int cpu, int sd_flag, int flags)
 {
@@ -1624,7 +1624,7 @@ select_task_rq_rt_hmp(struct task_struct *p, int cpu, int sd_flag, int flags)
 
 	return cpu;
 }
-#endif
+#endif*/
 
 /*
  * Return whether the task on the given cpu is currently non-preemptible
@@ -1683,9 +1683,9 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
 	int target;
 	int sync = flags & WF_SYNC;
 
-#ifdef CONFIG_SCHED_HMP
+/*#ifdef CONFIG_SCHED_HMP
 	return select_task_rq_rt_hmp(p, cpu, sd_flag, flags);
-#endif
+#endif*/
 
 	/* For anything but wake ups, just return the task_cpu */
 	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
