@@ -1298,7 +1298,7 @@ void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask)
 	if (running)
 		p->sched_class->set_curr_task(rq);
 	if (queued)
-		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
+		enqueue_task(rq, p, ENQUEUE_RESTORE);
 }
 
 /*
@@ -4105,7 +4105,7 @@ void set_user_nice(struct task_struct *p, long nice)
 	delta = p->prio - old_prio;
 
 	if (queued) {
-		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
+		enqueue_task(rq, p, ENQUEUE_RESTORE);
 		/*
 		 * If the task increased its priority or is running and
 		 * lowered its priority, then reschedule its CPU:
@@ -5815,7 +5815,7 @@ void sched_setnuma(struct task_struct *p, int nid)
 	if (running)
 		p->sched_class->set_curr_task(rq);
 	if (queued)
-		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
+		enqueue_task(rq, p, ENQUEUE_RESTORE);
 	task_rq_unlock(rq, p, &flags);
 }
 #endif /* CONFIG_NUMA_BALANCING */
@@ -6313,12 +6313,6 @@ set_table_entry(struct ctl_table *entry,
 		entry->extra1 = &min_load_idx;
 		entry->extra2 = &max_load_idx;
 	}
-//
-/*	if (queued)
-		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
-	if (running)
-		p->sched_class->set_curr_task(rq);
-        task_rq_unlock(rq, p, &flags);*/
 }
 
 static struct ctl_table *
@@ -9103,7 +9097,7 @@ void sched_move_task(struct task_struct *tsk)
 	if (unlikely(running))
 		tsk->sched_class->set_curr_task(rq);
 	if (queued)
-		enqueue_task(rq, tsk, ENQUEUE_RESTORE | ENQUEUE_MOVE | ENQUEUE_NOCLOCK);
+		enqueue_task(rq, tsk, ENQUEUE_RESTORE | ENQUEUE_MOVE);
 
 	task_rq_unlock(rq, tsk, &flags);
 }
