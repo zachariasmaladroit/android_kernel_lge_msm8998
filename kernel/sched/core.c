@@ -3968,25 +3968,10 @@ EXPORT_SYMBOL(default_wake_function);
 
 #ifdef CONFIG_RT_MUTEXES
 
-static inline int __rt_effective_prio(struct task_struct *pi_task, int prio)
-{
-	if (pi_task)
-		prio = min(prio, pi_task->prio);
-
-	return prio;
-}
-
-static inline int rt_effective_prio(struct task_struct *p, int prio)
-{
-	struct task_struct *pi_task = rt_mutex_get_top_task(p);
-
-	return __rt_effective_prio(pi_task, prio);
-}
-
 /*
  * rt_mutex_setprio - set the current priority of a task
- * @p: task to boost
- * @pi_task: donor task
+ * @p: task
+ * @prio: prio value (kernel-internal form)
  *
  * This function changes the 'effective' priority of a task. It does
  * not touch ->normal_prio like __setscheduler().
@@ -3994,41 +3979,17 @@ static inline int rt_effective_prio(struct task_struct *p, int prio)
  * Used by the rt_mutex code to implement priority inheritance
  * logic. Call site only calls if the priority of the task changed.
  */
-void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+void rt_mutex_setprio(struct task_struct *p, int prio)
 {
-	int prio, oldprio, queued, running, queue_flag =
+	int oldprio, queued, running, queue_flag =
 		DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
 	struct rq *rq;
 	const struct sched_class *prev_class;
 
-	/* XXX used to be waiter->prio, not waiter->task->prio */
-	prio = __rt_effective_prio(pi_task, p->normal_prio);
-
-	/*
-	 * If nothing changed; bail early.
-	 */
-	if (p->pi_top_task == pi_task && prio == p->prio && !dl_prio(prio))
-		return;
+	BUG_ON(prio > MAX_PRIO);
 
 	rq = __task_rq_lock(p);
 	update_rq_clock(rq);
-	/*
-	 * Set under pi_lock && rq->lock, such that the value can be used under
-	 * either lock.
-	 *
-	 * Note that there is loads of tricky to make this pointer cache work
-	 * right. rt_mutex_slowunlock()+rt_mutex_postunlock() work together to
-	 * ensure a task is de-boosted (pi_task is set to NULL) before the
-	 * task is allowed to run again (and can exit). This ensures the pointer
-	 * points to a blocked task -- which guaratees the task is present.
-	 */
-	p->pi_top_task = pi_task;
-
-	/*
-	 * For FIFO/RR we only need to set prio, if that matches we're done.
-	 */
-	if (prio == p->prio && !dl_prio(prio))
-		goto out_unlock;
 
 	/*
 	 * Idle task boosting is a nono in general. There is one
@@ -4048,7 +4009,9 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
 		goto out_unlock;
 	}
 
-	trace_sched_pi_setprio(p, prio); /* broken */
+	rt_mutex_update_top_task(p);
+
+	trace_sched_pi_setprio(p, prio);
 	oldprio = p->prio;
 
 	if (oldprio == prio)
@@ -4072,6 +4035,7 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
 	 *          running task
 	 */
 	if (dl_prio(prio)) {
+		struct task_struct *pi_task = rt_mutex_get_top_task(p);
 		if (!dl_prio(p->normal_prio) ||
 		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
 			p->dl.dl_boosted = 1;
@@ -4107,11 +4071,6 @@ out_unlock:
 
 	balance_callback(rq);
 	preempt_enable();
-}
-#else
-static inline int rt_effective_prio(struct task_struct *p, int prio)
-{
-	return prio;
 }
 #endif
 
@@ -4353,9 +4312,10 @@ static void __setscheduler(struct rq *rq, struct task_struct *p,
 	 * Keep a potential priority boosting if called from
 	 * sched_setscheduler().
 	 */
-	p->prio = normal_prio(p);
 	if (keep_boost)
-		p->prio = rt_effective_prio(p, p->prio);
+		p->prio = rt_mutex_get_effective_prio(p, normal_prio(p));
+	else
+		p->prio = normal_prio(p);
 
 	if (dl_prio(p->prio))
 		p->sched_class = &dl_sched_class;
@@ -4643,7 +4603,7 @@ change:
 		 * the runqueue. This will be done when the task deboost
 		 * itself.
 		 */
-		new_effective_prio = rt_effective_prio(p, newprio);
+		new_effective_prio = rt_mutex_get_effective_prio(p, newprio);
 		if (new_effective_prio == oldprio)
 			queue_flags &= ~DEQUEUE_MOVE;
 	}
