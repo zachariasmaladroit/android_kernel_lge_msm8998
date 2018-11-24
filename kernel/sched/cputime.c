@@ -80,8 +80,6 @@ void irqtime_account_irq(struct task_struct *curr)
 		sched_account_irqtime(cpu, curr, delta, wallclock);
 	else if (curr != this_cpu_ksoftirqd())
 		sched_account_irqstart(cpu, curr, wallclock);
-
-	local_irq_restore(flags);
 }
 EXPORT_SYMBOL_GPL(irqtime_account_irq);
 
