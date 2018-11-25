@@ -793,6 +793,9 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
 	u64 basemono = ts->timer_expires_base;
 	u64 expires = ts->timer_expires;
 	ktime_t tick = expires;
+#ifdef CONFIG_NO_HZ_FULL
+	ktime_t delta;
+#endif
 
 	/* Make sure we won't be trying to stop it twice in a row. */
 	ts->timer_expires_base = 0;
