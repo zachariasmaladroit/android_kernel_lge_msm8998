@@ -221,43 +221,53 @@ DEFINE_PER_CPU(bool, cpu_dead_idle);
  *
  * Called with polling cleared.
  */
-static void do_idle(void)
+static void cpu_idle_loop(void)
 {
+//	int cpu = smp_processor_id();
+	while (1) {
 	int cpu = smp_processor_id();
+		/*
+		 * If the arch has a polling bit, we maintain an invariant:
+		 *
+		 * Our polling bit is clear if we're not scheduled (i.e. if
+		 * rq->curr != rq->idle).  This means that, if rq->idle has
+		 * the polling bit set, then setting need_resched is
+		 * guaranteed to cause the cpu to reschedule.
+		 */
 
-	__current_set_polling();
-	tick_nohz_idle_enter();
+		__current_set_polling();
+		tick_nohz_idle_enter();
 
-	while (!need_resched()) {
-		check_pgt_cache();
-		rmb();
+		while (!need_resched()) {
+			check_pgt_cache();
+			rmb();
 
-		if (cpu_is_offline(cpu)) {
+			if (cpu_is_offline(cpu)) {
 	                        tick_nohz_idle_stop_tick_protected();
 				rcu_cpu_notify(NULL, CPU_DYING_IDLE,
 					       (void *)(long)smp_processor_id());
 				smp_mb(); /* all activity before dead. */
 				this_cpu_write(cpu_dead_idle, true);
 				arch_cpu_idle_dead();
-		}
+			}
 
-		local_irq_disable();
-		arch_cpu_idle_enter();
+			local_irq_disable();
+			arch_cpu_idle_enter();
 
-		/*
-		 * In poll mode we reenable interrupts and spin. Also if we
-		 * detected in the wakeup from idle path that the tick
-		 * broadcast device expired for us, we don't want to go deep
-		 * idle as we know that the IPI is going to arrive right away.
-		 */
-		if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
-			tick_nohz_idle_restart_tick();
-			cpu_idle_poll();
-		} else {
-			cpuidle_idle_call();
+			/*
+			* In poll mode we reenable interrupts and spin. Also if we
+			* detected in the wakeup from idle path that the tick
+			* broadcast device expired for us, we don't want to go deep
+			* idle as we know that the IPI is going to arrive right away.
+			*/
+			if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
+				tick_nohz_idle_restart_tick();
+				cpu_idle_poll();
+			} else {
+				cpuidle_idle_call();
+			}
+			arch_cpu_idle_exit();
 		}
-		arch_cpu_idle_exit();
-	}
 
 	/*
 	 * Since we fell out of the loop above, we know TIF_NEED_RESCHED must
@@ -278,7 +288,9 @@ static void do_idle(void)
 	smp_mb__after_atomic();
 
 	sched_ttwu_pending();
-	schedule_idle();
+//	schedule_idle();
+	schedule_preempt_disabled();
+	}
 }
 
 bool cpu_in_idle(unsigned long pc)
@@ -287,7 +299,7 @@ bool cpu_in_idle(unsigned long pc)
 		pc < (unsigned long)__cpuidle_text_end;
 }
 
-struct idle_timer {
+/*struct idle_timer {
 	struct hrtimer timer;
 	int done;
 };
@@ -304,13 +316,13 @@ static enum hrtimer_restart idle_inject_timer_fn(struct hrtimer *timer)
 
 void play_idle(unsigned long duration_ms)
 {
-	struct idle_timer it;
+	struct idle_timer it;*/
 
 	/*
 	 * Only FIFO tasks can disable the tick since they don't need the forced
 	 * preemption.
 	 */
-	WARN_ON_ONCE(current->policy != SCHED_FIFO);
+/*	WARN_ON_ONCE(current->policy != SCHED_FIFO);
 	WARN_ON_ONCE(current->nr_cpus_allowed != 1);
 	WARN_ON_ONCE(!(current->flags & PF_KTHREAD));
 	WARN_ON_ONCE(!(current->flags & PF_NO_SETAFFINITY));
@@ -335,7 +347,7 @@ void play_idle(unsigned long duration_ms)
 	preempt_fold_need_resched();
 	preempt_enable();
 }
-EXPORT_SYMBOL_GPL(play_idle);
+EXPORT_SYMBOL_GPL(play_idle);*/
 
 void cpu_startup_entry(enum cpuhp_state state)
 {
@@ -355,6 +367,7 @@ void cpu_startup_entry(enum cpuhp_state state)
 	boot_init_stack_canary();
 #endif
 	arch_cpu_idle_prepare();
-	while (1)
-		do_idle();
+//	while (1)
+//		do_idle();
+	cpu_idle_loop();
 }
