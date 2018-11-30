@@ -77,5 +77,3 @@ usb_f_laf-y                     := f_laf.o
 obj-$(CONFIG_LGE_USB_F_LAF)     += usb_f_laf.o
 usb_f_ccid-y			:= f_ccid.o
 obj-$(CONFIG_USB_F_CCID)   	+= usb_f_ccid.o
-usb_f_hid-y                     := f_hid.o
-obj-$(CONFIG_USB_G_ANDROID)     += usb_f_hid.o
