@@ -73,6 +73,9 @@ static int last_vote_buslevel;
 static int max_vote_buslevel;
 
 static int kgsl_pwrctrl_limit_enable = 0;
+#ifdef CONFIG_LGE_PM_CANCUN
+extern u32 compactmode_status;
+#endif
 
 static void kgsl_pwrctrl_clk(struct kgsl_device *device, int state,
 					int requested_state);
@@ -361,7 +364,11 @@ void kgsl_pwrctrl_pwrlevel_change(struct kgsl_device *device,
 	 * If thermal cycling is required and the new level hits the
 	 * thermal limit, kick off the cycling.
 	 */
+#ifdef CONFIG_LGE_PM_CANCUN
+	if (kgsl_pwrctrl_limit_enable || compactmode_status)
+#else
 	if (kgsl_pwrctrl_limit_enable)
+#endif
 		kgsl_pwrctrl_set_thermal_cycle(pwr, new_level);
 
 	if (new_level == old_level)
@@ -578,7 +585,11 @@ static ssize_t kgsl_pwrctrl_thermal_pwrlevel_store(struct device *dev,
 	int ret;
 	unsigned int level = 0;
 
+#ifdef CONFIG_LGE_PM_CANCUN
+	if (!kgsl_pwrctrl_limit_enable && !compactmode_status)
+#else
 	if (!kgsl_pwrctrl_limit_enable)
+#endif
 		return 0;
 
 	if (device == NULL)
@@ -626,7 +637,11 @@ static ssize_t kgsl_pwrctrl_max_pwrlevel_store(struct device *dev,
 	int ret;
 	unsigned int level = 0;
 
+#ifdef CONFIG_LGE_PM_CANCUN
+	if (!kgsl_pwrctrl_limit_enable && !compactmode_status)
+#else
 	if (!kgsl_pwrctrl_limit_enable)
+#endif
 		return 0;
 
 	if (device == NULL)
@@ -773,7 +788,11 @@ static void kgsl_pwrctrl_max_clock_set(struct kgsl_device *device, int val)
 		if (i == pwr->num_pwrlevels - 1)
 			goto err;
 
+#ifdef CONFIG_LGE_PM_CANCUN
+		if (kgsl_pwrctrl_limit_enable || compactmode_status) {
+#else
 		if (kgsl_pwrctrl_limit_enable) {
+#endif
 			hfreq = pwr->pwrlevels[i].gpu_freq;
 			diff =  hfreq - pwr->pwrlevels[i + 1].gpu_freq;
 			udiff = hfreq - val;
@@ -781,13 +800,22 @@ static void kgsl_pwrctrl_max_clock_set(struct kgsl_device *device, int val)
 			pwr->thermal_timeout = (udiff * TH_HZ) / diff;
 			pwr->thermal_cycle = CYCLE_ENABLE;
 		}
+#ifdef CONFIG_LGE_PM_CANCUN
+	} else if (kgsl_pwrctrl_limit_enable || compactmode_status) {
+#else
 	} else if (kgsl_pwrctrl_limit_enable) {
+#endif
 		pwr->thermal_cycle = CYCLE_DISABLE;
 		del_timer_sync(&pwr->thermal_timer);
 	}
 	mutex_unlock(&device->mutex);
 
-	if (kgsl_pwrctrl_limit_enable && pwr->sysfs_pwr_limit)
+#ifdef CONFIG_LGE_PM_CANCUN
+	if ((kgsl_pwrctrl_limit_enable || compactmode_status) &&
+#else
+	if (kgsl_pwrctrl_limit_enable &&
+#endif
+	    pwr->sysfs_pwr_limit)
 		kgsl_pwr_limits_set_freq(pwr->sysfs_pwr_limit,
 					pwr->pwrlevels[level].gpu_freq);
 
@@ -828,7 +856,12 @@ static unsigned int kgsl_pwrctrl_max_clock_get(struct kgsl_device *device)
 	freq = pwr->pwrlevels[pwr->thermal_pwrlevel].gpu_freq;
 
 	/* Calculate the effective frequency if we're cycling */
-	if (kgsl_pwrctrl_limit_enable && pwr->thermal_cycle) {
+#ifdef CONFIG_LGE_PM_CANCUN
+	if ((kgsl_pwrctrl_limit_enable || compactmode_status) &&
+#else
+	if (kgsl_pwrctrl_limit_enable &&
+#endif
+	    pwr->thermal_cycle) {
 		unsigned int hfreq = freq;
 		unsigned int lfreq = pwr->pwrlevels[pwr->
 				thermal_pwrlevel + 1].gpu_freq;
@@ -2745,7 +2778,11 @@ _slumber(struct kgsl_device *device)
 		del_timer_sync(&device->idle_timer);
 		kgsl_pwrscale_midframe_timer_cancel(device);
 
+#ifdef CONFIG_LGE_PM_CANCUN
+		if ((kgsl_pwrctrl_limit_enable || compactmode_status) &&
+#else
 		if (kgsl_pwrctrl_limit_enable &&
+#endif
 		    device->pwrctrl.thermal_cycle == CYCLE_ACTIVE) {
 			device->pwrctrl.thermal_cycle = CYCLE_ENABLE;
 			del_timer_sync(&device->pwrctrl.thermal_timer);
@@ -3075,7 +3112,11 @@ static void _update_limits(struct kgsl_pwr_limit *limit, unsigned int reason,
 done:
 	spin_unlock(&pwr->limits_lock);
 
+#ifdef CONFIG_LGE_PM_CANCUN
+	if (!kgsl_pwrctrl_limit_enable && !compactmode_status)
+#else
 	if (!kgsl_pwrctrl_limit_enable)
+#endif
 		return;
 
 	mutex_lock(&device->mutex);

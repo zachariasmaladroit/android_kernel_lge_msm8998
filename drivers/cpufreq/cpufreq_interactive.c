@@ -134,6 +134,7 @@ u32 gpubound_status = 0;
 u32 compactmode_status = 0;
 u64 gpu_busytime =  0ULL;
 u64 gpu_idletime =  0ULL;
+EXPORT_SYMBOL_GPL(compactmode_status);
 
 #endif /*CONFIG_LGE_PM_CANCUN*/
 
