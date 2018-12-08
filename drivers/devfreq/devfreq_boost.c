@@ -38,9 +38,18 @@ static void __devfreq_boost_kick(struct boost_dev *b)
 	queue_work(b->wq, &b->input_boost);
 }
 
+#ifdef CONFIG_LGE_PM_CANCUN
+extern u32 compactmode_status;
+#endif
+
 static void __devfreq_boost_kick_gpu(struct boost_dev *b)
 {
 	unsigned long flags;
+
+#ifdef CONFIG_LGE_PM_CANCUN
+	if (compactmode_status)
+		return;
+#endif
 
 	spin_lock_irqsave(&b->lock, flags);
 	if (!b->df || b->disable) {
