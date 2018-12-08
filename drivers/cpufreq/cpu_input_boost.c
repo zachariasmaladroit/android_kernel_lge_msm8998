@@ -135,9 +135,18 @@ void cpu_input_boost_kick_max(unsigned int duration_ms)
 	__cpu_input_boost_kick_max(b, duration_ms);
 }
 
+#ifdef CONFIG_LGE_PM_CANCUN
+extern u32 compactmode_status;
+#endif
+
 void cpu_input_boost_kick_gpu(void)
 {
 	struct boost_drv *b = boost_drv_g;
+
+#ifdef CONFIG_LGE_PM_CANCUN
+	if (compactmode_status)
+		return;
+#endif
 
 	if (!b)
 		return;
