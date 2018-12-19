@@ -416,12 +416,7 @@ static void *persistent_ram_vmap(phys_addr_t start, size_t size,
 	vaddr = vmap(pages, page_count, VM_MAP, prot);
 	kfree(pages);
 
-	/*
-	 * Since vmap() uses page granularity, we must add the offset
-	 * into the page here, to get the byte granularity address
-	 * into the mapping to represent the actual "start" location.
-	 */
-	return vaddr + offset_in_page(start);
+	return vaddr;
 }
 
 static void *persistent_ram_iomap(phys_addr_t start, size_t size,
@@ -440,11 +435,6 @@ static void *persistent_ram_iomap(phys_addr_t start, size_t size,
 	else
 		va = ioremap_wc(start, size);
 
-	/*
-	 * Since request_mem_region() and ioremap() are byte-granularity
-	 * there is no need handle anything special like we do when the
-	 * vmap() case in persistent_ram_vmap() above.
-	 */
 	return va;
 }
 
@@ -465,7 +455,7 @@ static int persistent_ram_buffer_map(phys_addr_t start, phys_addr_t size,
 		return -ENOMEM;
 	}
 
-	prz->buffer = prz->vaddr;
+	prz->buffer = prz->vaddr + offset_in_page(start);
 	prz->buffer_size = size - sizeof(struct persistent_ram_buffer);
 
 	return 0;
@@ -512,8 +502,7 @@ void persistent_ram_free(struct persistent_ram_zone *prz)
 
 	if (prz->vaddr) {
 		if (pfn_valid(prz->paddr >> PAGE_SHIFT)) {
-			/* We must vunmap() at page-granularity. */
-			vunmap(prz->vaddr - offset_in_page(prz->paddr));
+			vunmap(prz->vaddr);
 		} else {
 			iounmap(prz->vaddr);
 			release_mem_region(prz->paddr, prz->size);
