@@ -3490,7 +3490,7 @@ static void sched_tick_remote(struct work_struct *work)
 	struct tick_work *twork = container_of(dwork, struct tick_work, work);
 	int cpu = twork->cpu;
 	struct rq *rq = cpu_rq(cpu);
-	struct rq_flags rf;
+//	struct rq_flags rf;
 
 	/*
 	 * Handle the tick only if it appears the remote CPU is running in full
@@ -3503,7 +3503,8 @@ static void sched_tick_remote(struct work_struct *work)
 		struct task_struct *curr;
 		u64 delta;
 
-		rq_lock_irq(rq, &rf);
+//		rq_lock_irq(rq, &rf);
+		raw_spin_lock(&rq->lock);
 		update_rq_clock(rq);
 		curr = rq->curr;
 		delta = rq_clock_task(rq) - curr->se.exec_start;
@@ -3514,7 +3515,8 @@ static void sched_tick_remote(struct work_struct *work)
 		 */
 		WARN_ON_ONCE(delta > (u64)NSEC_PER_SEC * 3);
 		curr->sched_class->task_tick(rq, curr, 0);
-		rq_unlock_irq(rq, &rf);
+//		rq_unlock_irq(rq, &rf);
+		raw_spin_unlock(&rq->lock);
 	}
 
 	/*
