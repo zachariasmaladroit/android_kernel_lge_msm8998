@@ -9339,8 +9339,8 @@ done:
 
 #ifdef CONFIG_SOUND_CONTROL
 static struct snd_soc_codec *sound_control_codec_ptr;
-static int speaker_gain_val = 6;
-int sound_control_speaker_gain(int gain);
+//static int speaker_gain_val = 6;
+//int sound_control_speaker_gain(int gain);
 
 static ssize_t headphone_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
