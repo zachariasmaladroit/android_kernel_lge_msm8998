@@ -405,6 +405,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -std=gnu89 $(call cc-option,-fno-PIE) \
+		   -march=armv8-a+crc+crypto \
 		   -fmodulo-sched -fmodulo-sched-allow-regmoves
 
 
